@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leodition – Loja – Camisetas</title>
+  <style>
+    :root {
+      --bg: #060606;
+      --text: #f4f4f4;
+      --muted: rgba(244,244,244,.72);
+      --orange: #ff7a18;
+      --yellow: #ffd84a;
+      --shadow: 0 14px 40px rgba(0,0,0,.55);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+    /* Vídeo de Fundo */
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -3;
+      opacity: .25;
+    }
+    .bg-video-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(255,122,24,.10), transparent 60%),
+        radial-gradient(900px 600px at 90% 15%, rgba(255,216,74,.08), transparent 55%),
+        radial-gradient(800px 600px at 40% 90%, rgba(255,122,24,.08), transparent 60%),
+        linear-gradient(180deg, rgba(5,5,5,.88) 0%, rgba(7,7,7,.88) 40%, rgba(5,5,5,.90) 100%);
+    }
+    .bg-noise {
+      position: fixed; inset: 0; z-index: -1; opacity: .12;
+      background-image: repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,.06) 0 1px, transparent 1px 6px);
+      filter: blur(.6px); pointer-events: none; mix-blend-mode: overlay;
+    }
+    .wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Topbar – igual ao resto do site */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(6,6,6,.75);
+      border-bottom: 1px solid rgba(255,154,61,.15);
+      transition: background 0.8s ease;
+    }
+    .topbar.focus-pulse { animation: topbarPulse 1.2s ease-out; }
+    @keyframes topbarPulse {
+      0% { background: rgba(6,6,6,.75); }
+      40% { background: rgba(6,6,6,.95); }
+      100% { background: rgba(6,6,6,.75); }
+    }
+    .topbar-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--text);
+      animation: floating 3s ease-in-out infinite;
+    }
+    .brand-logo {
+      height: 65px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(255,122,24,.3));
+    }
+    @media (max-width: 520px) { .brand-logo { height: 38px; } }
+    @keyframes floating {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .nav { display: flex; align-items: center; gap: 10px; }
+    .nav a {
+      color: rgba(244,244,244,.86);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .nav a:hover {
+      background: rgba(255,122,24,.15);
+      color: var(--yellow);
+      transform: translateY(-1px);
+    }
+    .nav a::after {
+      content: "";
+      position: absolute;
+      left: 14px; right: 14px; bottom: 7px;
+      height: 2px; border-radius: 999px;
+      background: linear-gradient(90deg, var(--yellow), var(--orange));
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .nav a.active::after { opacity: .9; }
+    .nav a.active {
+      font-weight: 800;
+      color: #ffffff !important;
+    }
+    .nav a.cta {
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      color: #120a00;
+      font-weight: 700;
+    }
+    .nav a.cta span { position: relative; z-index: 1; }
+    .nav a.cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow: 0 12px 28px rgba(255,122,24,.45);
+    }
+
+    /* Menu fixo de categorias da loja */
+    .shop-categories {
+      position: sticky;
+      top: 82px;
+      z-index: 40;
+      background: rgba(6,6,6,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,154,61,.15);
+      padding: 12px 18px;
+    }
+    .shop-categories-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+    .shop-categories a {
+      color: rgba(244,244,244,.86);
+      text-decoration: none;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: all .3s ease;
+    }
+    .shop-categories a:hover {
+      background: rgba(255,122,24,.15);
+      color: var(--yellow);
+    }
+    .shop-categories a.active {
+      background: rgba(255,122,24,.25);
+      color: var(--orange);
+      font-weight: 800;
+    }
+    @media (max-width: 680px) {
+      .shop-categories-inner { gap: 16px; flex-wrap: wrap; }
+      .shop-categories a { font-size: 13px; padding: 6px 12px; }
+    }
+
+    /* Main */
+    main { flex: 1; padding: 18px 18px 40px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .page-head { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .page-head h1 { margin: 0; font-size: 26px; }
+    .page-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    /* MENU DE COLEÇÕES – VERSÃO MAIS COMPACTA E DIFERENTE */
+    .collections {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .collection {
+      grid-column: span 3;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.035);
+      padding: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all .25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .collection:hover {
+      transform: translateY(-4px);
+      background: rgba(255,122,24,.06);
+      border-color: rgba(255,122,24,.20);
+      box-shadow: 0 8px 25px rgba(0,0,0,.4);
+    }
+    .collection .logo {
+      width: 100%;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .collection .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .collection b {
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: 12.5px;
+      color: var(--yellow);
+      margin-bottom: 4px;
+    }
+    .collection p {
+      margin: 0;
+      color: rgba(244,244,244,.78);
+      font-size: 12.5px;
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+    @media (max-width: 980px) {
+      .collection { grid-column: span 6; }
+    }
+    @media (max-width: 640px) {
+      .collection { grid-column: span 12; }
+      .collection .logo { height: 36px; }
+    }
+
+    /* Banner rotativo */
+    .banner {
+      margin-top: 32px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow: hidden;
+      position: relative;
+      height: 200px;
+    }
+    .banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity .8s ease;
+    }
+    .banner img.active { opacity: 1; }
+
+    /* Footer – igual ao resto */
+    footer {
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(6,6,6,.78);
+      backdrop-filter: blur(8px);
+      margin-top: 40px;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .contact-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.28);
+      text-decoration: none;
+      color: var(--text);
+      transition: all .2s ease;
+    }
+    .contact-item:hover {
+      transform: translateY(-2px);
+      background: rgba(255,122,24,.08);
+      border-color: rgba(255,122,24,.25);
+    }
+    .contact-item .label b {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: rgba(255,216,74,.90);
+      letter-spacing: .04em;
+    }
+    .contact-item .label span {
+      font-size: 13px;
+      color: rgba(244,244,244,.80);
+    }
+    .icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,216,74,.18);
+      background: linear-gradient(135deg, rgba(255,122,24,.25), rgba(255,216,74,.12));
+    }
+    .icon svg {
+      width: 18px;
+      height: 18px;
+      fill: rgba(244,244,244,.92);
+    }
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: rgba(244,244,244,.62);
+      font-size: 12px;
+      padding-top: 10px;
+    }
+    .footer-bottom .slogan {
+      color: rgba(255,216,74,.78);
+      letter-spacing: .04em;
+    }
+    @media (max-width: 900px) {
+      .contact-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="assets/video/loja-bg.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay"></div>
+  <div class="bg-noise"></div>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="assets/img/logo/leologo.png" alt="Leodition">
+        </a>
+        <nav class="nav">
+          <a href="index.html">PÁGINA INICIAL</a>
+          <a href="servicos.html">SERVIÇOS</a>
+          <a href="portfolio.html">PROJETOS</a>
+          <a class="active" href="loja.html">LOJA</a>
+          <a class="cta" href="fale-com-a-gente.html"><span>FALE COM A GENTE</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Menu fixo de categorias -->
+    <div class="shop-categories">
+      <div class="shop-categories-inner">
+        <a href="loja-camisetas.html" class="active">CAMISETAS</a>
+        <a href="loja-canecas.html">CANECAS</a>
+        <a href="loja-diversos.html">DIVERSOS</a>
+      </div>
+    </div>
+
+    <main>
+      <div class="container">
+        <div class="page-head">
+          <h1>CAMISETAS</h1>
+          <p>Escolha uma coleção.</p>
+        </div>
+
+        <section class="collections" aria-label="Coleções de camisetas">
+          <a class="collection" href="camisetas-comicas.html">
+            <div class="logo"><img src="assets/img/loja/camisetas/colecoes/logo-1.png" alt="Camisetas Cômicas"></div>
+            <b>CAMISETAS CÔMICAS</b>
+            <p>Frases e ideias pra rir (e presentear).</p>
+          </a>
+          <a class="collection" href="camisetas-conceituais.html">
+            <div class="logo"><img src="assets/img/loja/camisetas/colecoes/logo-3.png" alt="Camisetas Conceituais"></div>
+            <b>CAMISETAS CONCEITUAIS</b>
+            <p>Detalhes criativos e visuais marcantes.</p>
+          </a>
+          <a class="collection" href="camisetas-lgbt.html">
+            <div class="logo"><img src="assets/img/loja/camisetas/colecoes/logo-4.png" alt="Camisetas LGBT"></div>
+            <b>CAMISETAS LGBT</b>
+            <p>Peças com orgulho e identidade.</p>
+          </a>
+          <a class="collection" href="camisetas-frases.html">
+            <div class="logo"><img src="assets/img/loja/camisetas/colecoes/logo-2.png" alt="Com Frases"></div>
+            <b>COM FRASES</b>
+            <p>Clássicas, diretas, com atitude.</p>
+          </a>
+        </section>
+
+        <div class="banner" aria-label="Banner promocional">
+          <img class="active" src="assets/img/loja/banners/banner-1.jpg" alt="Banner 1">
+          <img src="assets/img/loja/banners/banner-2.jpg" alt="Banner 2">
+          <img src="assets/img/loja/banners/banner-3.jpg" alt="Banner 3">
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="contact-strip" aria-label="Contatos Leodition">
+          <a class="contact-item" href="mailto:comercial@leodition.com.br?subject=Contato%20-%20Leodition%20Marketing%20Play" target="_blank" rel="noopener">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </div>
+            <div class="label">
+              <b>E-mail</b>
+              <span>comercial@leodition.com.br</span>
+            </div>
+          </a>
+          <a class="contact-item" href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto." target="_blank" rel="noopener">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 003.7 18.6L2 22l3.6-1.6A11 11 0 1020.5 3.5zM12 20a8.9 8.9 0 01-4.5-1.2l-.3-.2-2.1.9.9-2.1-.2-.3A9 9 0 1112 20zm5-6.7c-.3-.1-1.8-.9-2-.9s-.4-.1-.6.1-.7.9-.9 1-.3.2-.6.1a7.2 7.2 0 01-2.1-1.3 7.9 7.9 0 01-1.5-1.9c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.1-.3.2-.4 0-.1 0-.3-.1-.4s-.6-1.5-.9-2-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.7-.8 1.7.8 2 1 2.3a9.2 9.2 0 003.5 3.6c2 1.1 2 1 2.4.9s1.3-.5 1.5-1 .2-1 .1-1.1-.2-.2-.5-.3z"/></svg>
+            </div>
+            <div class="label">
+              <b>WhatsApp</b>
+              <span>51 9 9891-1304</span>
+            </div>
+          </a>
+          <a class="contact-item" href="https://www.instagram.com/leodition/" target="_blank" rel="noopener">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm10 2H7a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3zm-5 3.5A4.5 4.5 0 1112 16a4.5 4.5 0 010-9zm0 2A2.5 2.5 0 1014.5 12 2.5 2.5 0 0012 9.5zM17.8 6.2a1 1 0 11-1 1 1 1 0 011-1z"/></svg>
+            </div>
+            <div class="label">
+              <b>Instagram</b>
+              <span>@Leodition</span>
+            </div>
+          </a>
+          <a class="contact-item" href="https://www.linkedin.com/company/leodition" target="_blank" rel="noopener">
+            <div class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 24V7.98h5V24H0zm7.5 0h5V15.5c0-2.25.5-4 3.25-4 2.72 0 2.75 2.55 2.75 4.15V24h5V14.5C23.5 9.85 21 7.5 17 7.5c-1.92 0-3.2 1.05-3.75 2.05h-.05V7.98h-5V24z"/></svg>
+            </div>
+            <div class="label">
+              <b>LinkedIn</b>
+              <span>/company/leodition</span>
+            </div>
+          </a>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2025 Leodition – Marketing Play.</div>
+          <div class="slogan">Entende. Pensa. Cria.</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Banner rotator
+    (function(){
+      const banner = document.querySelector('.banner');
+      if (!banner) return;
+      const imgs = banner.querySelectorAll('img');
+      let i = 0;
+      imgs[0].classList.add('active');
+      setInterval(() => {
+        imgs[i].classList.remove('active');
+        i = (i + 1) % imgs.length;
+        imgs[i].classList.add('active');
+      }, 3500);
+    })();
+  </script>
+<script>
+// === CONTADORES DE ESTATÍSTICAS (localStorage) ===
+const stats = {
+  get: () => JSON.parse(localStorage.getItem('leodition_stats') || '{}'),
+  save: (data) => localStorage.setItem('leodition_stats', JSON.stringify(data)),
+  increment: (key) => {
+    let data = stats.get();
+    data[key] = (data[key] || 0) + 1;
+    stats.save(data);
+  }
+};
+
+// Contar visita à página LOJA
+stats.increment('visitas_total');
+stats.increment('aba_loja');
+
+// Função para registrar visualização de categoria/produto
+function registrarVisualizacaoCategoria(nomeCategoria) {
+  let data = stats.get();
+  data.visualizacoes_categorias = data.visualizacoes_categorias || {};
+  data.visualizacoes_categorias[nomeCategoria] = (data.visualizacoes_categorias[nomeCategoria] || 0) + 1;
+
+  // Atualiza o produto/categoria mais visto
+  let max = 0;
+  let maisVisto = 'Nenhum ainda';
+  for (let cat in data.visualizacoes_categorias) {
+    if (data.visualizacoes_categorias[cat] > max) {
+      max = data.visualizacoes_categorias[cat];
+      maisVisto = `${cat} (${max} ${max === 1 ? 'vez' : 'vezes'})`;
+    } else if (data.visualizacoes_categorias[cat] === max && max > 0) {
+      maisVisto += ` | ${cat} (${max} ${max === 1 ? 'vez' : 'vezes'})`;
+    }
+  }
+  data.categoria_mais_vista = maisVisto || 'Nenhum ainda';
+  stats.save(data);
+}
+
+// Adicionar o onclick em cada link de categoria
+document.querySelectorAll('.card-link').forEach(link => {
+  const titulo = link.querySelector('h3').textContent.trim();
+  link.addEventListener('click', () => {
+    registrarVisualizacaoCategoria(titulo);
+  });
+});
+
+// === PAINEL SECRETO COM PALAVRA "DANIEL" ===
+let buffer = '';
+const PALAVRA_SECRETA = 'daniel';
+let panelAberto = false;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key.length === 1) {
+    buffer += e.key.toLowerCase();
+    if (buffer.length > PALAVRA_SECRETA.length) {
+      buffer = buffer.slice(-PALAVRA_SECRETA.length);
+    }
+    if (buffer === PALAVRA_SECRETA) {
+      buffer = '';
+      toggleAdminPanel();
+    }
+  } else if (e.key === 'Backspace') {
+    buffer = buffer.slice(0, -1);
+  } else {
+    buffer = '';
+  }
+});
+
+function toggleAdminPanel() {
+  if (panelAberto) {
+    document.getElementById('adminPanel')?.remove();
+    panelAberto = false;
+    return;
+  }
+
+  const data = stats.get();
+
+  const abas = {
+    aba_home: data.aba_home || 0,
+    aba_servicos: data.aba_servicos || 0,
+    aba_projetos: data.aba_projetos || 0,
+    aba_loja: data.aba_loja || 0,
+    aba_contato: data.aba_contato || 0
+  };
+
+  const nomesAbas = {
+    aba_home: 'Página Inicial',
+    aba_servicos: 'Serviços',
+    aba_projetos: 'Projetos',
+    aba_loja: 'Loja',
+    aba_contato: 'Fale com a Gente'
+  };
+
+  const panel = document.createElement('div');
+  panel.id = 'adminPanel';
+  panel.innerHTML = `
+    <div style="position:fixed;top:20px;right:20px;width:400px;background:rgba(18,18,18,.95);border:1px solid rgba(255,122,24,.4);border-radius:18px;padding:20px;color:#f4f4f4;font-family:system-ui;z-index:9999;box-shadow:0 20px 50px rgba(0,0,0,.8);backdrop-filter:blur(12px);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+        <h3 style="margin:0;font-size:19px;color:#ffd84a;">Painel Administrativo</h3>
+        <button onclick="this.closest('#adminPanel').remove();panelAberto=false" style="background:none;border:none;color:#ff7a18;font-size:24px;cursor:pointer;line-height:1;">×</button>
+      </div>
+      <div style="font-size:14px;line-height:1.7;">
+        <p><strong>Visitas totais:</strong> ${data.visitas_total || 0}</p>
+        <p><strong>Cliques nas abas:</strong></p>
+        <ul style="margin:6px 0 14px;padding-left:22px;font-size:13px;">
+          ${Object.keys(abas).map(key => `<li>${nomesAbas[key]}: <strong>${abas[key]}</strong></li>`).join('')}
+        </ul>
+        <p><strong>Categoria mais visualizada na loja:</strong><br>
+           <span style="color:#ffd84a;font-size:15px;">${data.categoria_mais_vista || 'Nenhum ainda'}</span>
+        </p>
+        <small style="color:#aaa;display:block;margin-top:20px;font-size:12px;">
+          Digite "daniel" novamente para fechar.<br>
+          Dados salvos só no seu navegador.
+        </small>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(panel);
+  panelAberto = true;
+}
+</script>
+<script>
+// === SISTEMA DE ESTATÍSTICAS E PAINEL SECRETO UNIVERSAL ===
+
+// Funções de armazenamento
+const stats = {
+  get: () => JSON.parse(localStorage.getItem('leodition_stats') || '{}'),
+  save: (data) => localStorage.setItem('leodition_stats', JSON.stringify(data)),
+  increment: (key) => {
+    let data = stats.get();
+    data[key] = (data[key] || 0) + 1;
+    stats.save(data);
+  }
+};
+
+// === 1. Contar visita total (em todas as páginas)
+stats.increment('visitas_total');
+
+// === 2. Detectar automaticamente qual página estamos e contar a aba correspondente
+const paginaAtual = window.location.pathname.split('/').pop() || 'index.html';
+
+const mapaAbas = {
+  'index.html': 'aba_home',
+  'servicos.html': 'aba_servicos',
+  'portfolio.html': 'aba_projetos',
+  'loja.html': 'aba_loja',
+  'fale-com-a-gente.html': 'aba_contato'
+};
+
+if (mapaAbas[paginaAtual]) {
+  stats.increment(mapaAbas[paginaAtual]);
+}
+
+// === 3. [APENAS NA LOJA] Contar cliques nas categorias de produtos
+if (paginaAtual === 'loja.html') {
+  function registrarVisualizacaoCategoria(nome) {
+    let data = stats.get();
+    data.visualizacoes_categorias = data.visualizacoes_categorias || {};
+    data.visualizacoes_categorias[nome] = (data.visualizacoes_categorias[nome] || 0) + 1;
+
+    // Atualiza a categoria mais vista
+    let max = 0;
+    let maisVisto = 'Nenhum ainda';
+    let empatados = [];
+    for (let cat in data.visualizacoes_categorias) {
+      const count = data.visualizacoes_categorias[cat];
+      if (count > max) {
+        max = count;
+        empatados = [cat];
+      } else if (count === max && max > 0) {
+        empatados.push(cat);
+      }
+    }
+    if (max > 0) {
+      maisVisto = empatados.map(c => `${c} (${max} ${max === 1 ? 'vez' : 'vezes'})`).join(' | ');
+    }
+    data.categoria_mais_vista = maisVisto;
+    stats.save(data);
+  }
+
+  // Adiciona o evento de clique nos cards da loja
+  document.querySelectorAll('.card-link').forEach(link => {
+    const titulo = link.querySelector('h3')?.textContent.trim() || 'Categoria desconhecida';
+    link.addEventListener('click', () => registrarVisualizacaoCategoria(titulo));
+  });
+}
+
+// === 4. Painel secreto ao digitar "daniel"
+let buffer = '';
+const PALAVRA_SECRETA = 'daniel';
+let panelAberto = false;
+
+document.addEventListener('keydown', (e) => {
+  if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+    buffer += e.key.toLowerCase();
+    if (buffer.length > PALAVRA_SECRETA.length) {
+      buffer = buffer.slice(-PALAVRA_SECRETA.length);
+    }
+    if (buffer === PALAVRA_SECRETA) {
+      buffer = '';
+      toggleAdminPanel();
+    }
+  } else if (e.key === 'Backspace') {
+    buffer = buffer.slice(0, -1);
+  } else if (e.key !== 'Shift' && e.key !== 'Control' && e.key !== 'Alt') {
+    buffer = '';
+  }
+});
+
+function toggleAdminPanel() {
+  if (panelAberto) {
+    document.getElementById('adminPanel')?.remove();
+    panelAberto = false;
+    return;
+  }
+
+  const data = stats.get();
+
+  const nomesAbas = {
+    aba_home: 'Página Inicial',
+    aba_servicos: 'Serviços',
+    aba_projetos: 'Projetos',
+    aba_loja: 'Loja',
+    aba_contato: 'Fale com a Gente'
+  };
+
+  const abasContadas = {
+    aba_home: data.aba_home || 0,
+    aba_servicos: data.aba_servicos || 0,
+    aba_projetos: data.aba_projetos || 0,
+    aba_loja: data.aba_loja || 0,
+    aba_contato: data.aba_contato || 0
+  };
+
+  const panel = document.createElement('div');
+  panel.id = 'adminPanel';
+  panel.innerHTML = `
+    <div style="position:fixed;top:20px;right:20px;width:420px;background:rgba(18,18,18,.96);border:1px solid rgba(255,122,24,.5);border-radius:20px;padding:22px;color:#f4f4f4;font-family:system-ui;z-index:99999;box-shadow:0 20px 60px rgba(0,0,0,.9);backdrop-filter:blur(14px);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h3 style="margin:0;font-size:20px;color:#ffd84a;">Painel Administrativo</h3>
+        <button onclick="this.closest('#adminPanel').remove();panelAberto=false" style="background:none;border:none;color:#ff7a18;font-size:28px;cursor:pointer;">×</button>
+      </div>
+      <div style="font-size:14px;line-height:1.7;">
+        <p><strong>Visitas totais ao site:</strong> ${data.visitas_total || 0}</p>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin:16px 0;">
+        <p><strong>Acessos por aba:</strong></p>
+        <ul style="margin:8px 0 16px;padding-left:24px;">
+          ${Object.keys(abasContadas).map(key => 
+            `<li>${nomesAbas[key]}: <strong>${abasContadas[key]}</strong></li>`
+          ).join('')}
+        </ul>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin:16px 0;">
+        <p><strong>Categoria mais vista na loja:</strong><br>
+           <span style="color:#ffd84a;font-size:15px;">${data.categoria_mais_vista || 'Nenhum clique registrado ainda'}</span>
+        </p>
+        <small style="color:#aaa;display:block;margin-top:24px;font-size:12px;line-height:1.4;">
+          Digite "daniel" novamente para fechar.<br>
+          Dados salvos apenas no seu navegador (localStorage).
+        </small>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(panel);
+  panelAberto = true;
+}
+</script>
+</body>
+</html>
