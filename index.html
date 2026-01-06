@@ -3,19 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Leodition – Página Inicial</title>
-  <!-- Open Graph tags para prévia no WhatsApp, Facebook, etc. -->
-<meta property="og:title" content="Leodition | Marketing Play" />
-<meta property="og:description" content="Estúdio de marketing e comunicação: identidade visual, conteúdos, personalizações e experiências." />
-<meta property="og:image" content="https://leodition.com.br/assets/img/logo/leoditionlogo.jpg" />
-<meta property="og:url" content="https://leodition.com.br/" />
-<meta property="og:type" content="website" />
-<meta property="og:site_name" content="Leodition" />
 
-<!-- Opcional: dimensões da imagem (ajuda o WhatsApp a renderizar melhor) -->
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Leodition - Marketing Play" />
+  <!-- Open Graph tags - Configuração mínima SEM IMAGEM -->
+  <meta property="og:title" content="Leodition | Marketing Play" />
+  <meta property="og:description" content="Estúdio de marketing e comunicação: identidade visual, conteúdos, personalizações e experiências que aproximam marcas de pessoas." />
+  <meta property="og:url" content="https://leodition.com.br/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Leodition" />
+
+  <!-- Título da aba e da prévia no WhatsApp -->
+  <title>Leodition | Marketing Play</title>
+
   <style>
     :root {
       --bg: #060606;
@@ -403,7 +401,7 @@ Super recomendo.”</p>
             <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
             <div class="label"><b>E-mail</b><span>comercial@leodition.com.br</span></div>
           </a>
-          <a class="contact-item" href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto." target="_blank" rel="noopener">
+          <a class="contact-item" href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto" target="_blank" rel="noopener">
             <div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 003.7 18.6L2 22l3.6-1.6A11 11 0 1020.5 3.5zM12 20a8.9 8.9 0 01-4.5-1.2l-.3-.2-2.1.9.9-2.1-.2-.3A9 9 0 1112 20zm5-6.7c-.3-.1-1.8-.9-2-.9s-.4-.1-.6.1-.7.9-.9 1-.3.2-.6.1a7.2 7.2 0 01-2.1-1.3 7.9 7.9 0 01-1.5-1.9c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.1-.3.2-.4 0-.1 0-.3-.1-.4s-.6-1.5-.9-2-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.7-.8 1.7.8 2 1 2.3a9.2 9.2 0 003.5 3.6c2 1.1 2 1 2.4.9s1.3-.5 1.5-1 .2-1 .1-1.1-.2-.2-.5-.3z"/></svg></div>
             <div class="label"><b>WhatsApp</b><span>51 9 9891-1304</span></div>
           </a>
@@ -423,7 +421,6 @@ Super recomendo.”</p>
       </div>
     </footer>
   </div>
-
   <!-- Scripts originais da página (galeria, easter eggs, efeitos de foco) -->
   <script>
     /* Rotação da galeria */
@@ -539,11 +536,9 @@ Super recomendo.”</p>
       });
     });
   </script>
-
   <!-- SCRIPT ÚNICO DE ESTATÍSTICAS E PAINEL SECRETO "DANIEL" -->
   <script>
     // === SISTEMA ÚNICO DE ESTATÍSTICAS E PAINEL SECRETO ===
-
     const stats = {
       get: () => JSON.parse(localStorage.getItem('leodition_stats') || '{}'),
       save: (data) => localStorage.setItem('leodition_stats', JSON.stringify(data)),
@@ -553,13 +548,10 @@ Super recomendo.”</p>
         stats.save(data);
       }
     };
-
     // 1. Contar visita total
     stats.increment('visitas_total');
-
     // 2. Detectar página atual e contar aba correta
     const paginaAtual = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
-
     const mapaAbas = {
       'index.html': 'aba_home',
       'servicos.html': 'aba_servicos',
@@ -568,11 +560,9 @@ Super recomendo.”</p>
       'fale-com-a-gente.html': 'aba_contato',
       '': 'aba_home',
     };
-
     if (mapaAbas[paginaAtual]) {
       stats.increment(mapaAbas[paginaAtual]);
     }
-
     // 3. [SÓ NA LOJA] Contar cliques em categorias (se existir .card-link)
     if (paginaAtual === 'loja.html') {
       document.querySelectorAll('.card-link').forEach(link => {
@@ -581,7 +571,6 @@ Super recomendo.”</p>
           let data = stats.get();
           data.visualizacoes_categorias = data.visualizacoes_categorias || {};
           data.visualizacoes_categorias[titulo] = (data.visualizacoes_categorias[titulo] || 0) + 1;
-
           // Atualiza categoria mais vista
           let max = 0;
           let empatados = [];
@@ -594,20 +583,18 @@ Super recomendo.”</p>
               empatados.push(cat);
             }
           }
-          data.categoria_mais_vista = max > 0 
+          data.categoria_mais_vista = max > 0
             ? empatados.map(c => `${c} (${max} vez${max > 1 ? 'es' : ''})`).join(' | ')
             : 'Nenhum ainda';
-          
+         
           stats.save(data);
         });
       });
     }
-
     // 4. Painel secreto "daniel"
     let buffer = '';
     const PALAVRA_SECRETA = 'daniel';
     let panelAberto = false;
-
     document.addEventListener('keydown', (e) => {
       if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
         buffer += e.key.toLowerCase();
@@ -624,14 +611,12 @@ Super recomendo.”</p>
         buffer = '';
       }
     });
-
     function toggleAdminPanel() {
       if (panelAberto) {
         document.getElementById('adminPanel')?.remove();
         panelAberto = false;
         return;
       }
-
       const data = stats.get();
       const nomesAbas = {
         aba_home: 'Página Inicial',
@@ -640,7 +625,6 @@ Super recomendo.”</p>
         aba_loja: 'Loja',
         aba_contato: 'Fale com a Gente'
       };
-
       const abasContadas = {
         aba_home: data.aba_home || 0,
         aba_servicos: data.aba_servicos || 0,
@@ -648,7 +632,6 @@ Super recomendo.”</p>
         aba_loja: data.aba_loja || 0,
         aba_contato: data.aba_contato || 0
       };
-
       const panel = document.createElement('div');
       panel.id = 'adminPanel';
       panel.innerHTML = `
