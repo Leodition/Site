@@ -571,6 +571,13 @@
     body.secret-mode::before { background: radial-gradient(1200px 700px at 10% 10%, rgba(255,122,24,.26), transparent 60%), radial-gradient(900px 600px at 90% 15%, rgba(255,216,74,.22), transparent 55%), radial-gradient(800px 600px at 40% 90%, rgba(255,122,24,.18), transparent 60%), linear-gradient(120deg, #000 0%, #ff7a00 45%, #ffd000 100%); }
 
     @keyframes secretBright { from { filter: brightness(1); } to { filter: brightness(1.15); } }
+/* ===== CORREÇÃO DE EMERGÊNCIA: NÃO DEIXA SEÇÕES INVISÍVEIS ===== */
+.hero-card,
+.insta-gallery,
+.review {
+  opacity: 1 !important;
+  transform: none !important;
+}
 
   </style>
 
