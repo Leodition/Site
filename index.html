@@ -3,16 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leodition – Página Inicial</title>
 
-  <!-- Open Graph tags - Configuração mínima SEM IMAGEM -->
-  <meta property="og:title" content="Leodition | Marketing Play" />
-  <meta property="og:description" content="Estúdio de marketing e comunicação: identidade visual, conteúdos, personalizações e experiências que aproximam marcas de pessoas." />
-  <meta property="og:url" content="https://leodition.com.br/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Leodition" />
-
-  <!-- Título da aba e da prévia no WhatsApp -->
-  <title>Leodition | Marketing Play</title>
+  <!-- Ativa animações somente quando JS está OK (evita sumir conteúdo se der erro) -->
+  <script>
+    document.documentElement.classList.add('js');
+  </script>
 
   <style>
     :root {
@@ -28,11 +24,269 @@
       --shadow: 0 14px 40px rgba(0,0,0,.55);
       --radius: 18px;
     }
-    /* ... todo o resto do seu CSS continua igual ... */
-  </style>
-</head>
-<body>
-  <!-- O resto do body permanece 100% igual ao que você enviou -->
-  <!-- Vídeo, header, main, footer, scripts... tudo idêntico -->
-</body>
-</html>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* VÍDEO DE FUNDO – MESMO DA LOJA */
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -3;
+      opacity: .25;
+    }
+    .bg-video-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(1200px 700px at 10% 10%, rgba(255,122,24,.10), transparent 60%),
+        radial-gradient(900px 600px at 90% 15%, rgba(255,216,74,.08), transparent 55%),
+        radial-gradient(800px 600px at 40% 90%, rgba(255,122,24,.08), transparent 60%),
+        linear-gradient(180deg, rgba(5,5,5,.88) 0%, rgba(7,7,7,.88) 40%, rgba(5,5,5,.90) 100%);
+    }
+    .bg-noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      opacity: .20;
+      background-image: repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,.08) 0 1px, transparent 1px 6px);
+      filter: blur(.6px);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Topbar */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(6,6,6,.75);
+      border-bottom: 1px solid rgba(255,154,61,.15);
+      transition: background 0.8s ease;
+    }
+    .topbar.focus-pulse { animation: topbarPulse 1.2s ease-out; }
+    @keyframes topbarPulse {
+      0% { background: rgba(6,6,6,.75); }
+      40% { background: rgba(6,6,6,.95); }
+      100% { background: rgba(6,6,6,.75); }
+    }
+    .topbar-inner {
+      max-width: 1100px; margin: 0 auto; padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: var(--text);
+      animation: floating 3s ease-in-out infinite;
+    }
+    .brand-logo { height: 65px; width: auto; display: block; filter: drop-shadow(0 0 10px rgba(255,122,24,.3)); }
+    @media (max-width: 520px) { .brand-logo { height: 38px; } }
+
+    .nav { display: flex; align-items: center; gap: 10px; }
+    .nav a {
+      color: rgba(244,244,244,.86); text-decoration: none; font-size: 13px;
+      padding: 10px 12px; border-radius: 999px; transition: all .3s ease;
+      position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: .08em;
+    }
+    .nav a:hover { transform: translateY(-1px); background: rgba(255,122,24,.15); color: var(--yellow); }
+    .nav a::after {
+      content: ""; position: absolute; left: 14px; right: 14px; bottom: 7px;
+      height: 2px; border-radius: 999px; background: linear-gradient(90deg, var(--yellow), var(--orange));
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .nav a.active::after { opacity: .9; }
+    .nav a.active { font-weight: 800; color: #ffffff !important; }
+
+    /* BOTÃO FALE COM A GENTE – GRADIENTE AMARELO/LARANJA BRILHOSO */
+    .nav a.cta {
+      background: linear-gradient(135deg, var(--yellow), var(--orange));
+      border: none;
+      color: #120a00;
+      font-weight: 700;
+    }
+    .nav a.cta span { position: relative; z-index: 1; }
+    .nav a.cta:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+      box-shadow: 0 12px 28px rgba(255,122,24,.45);
+    }
+
+    /* Main Content */
+    main { flex: 1; padding: 26px 18px 12px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* HERO RETANGULAR + GALERIA QUADRADA REDUZIDA */
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    /* ✅ IMPORTANTE: por padrão, o conteúdo aparece.
+       Só fica "invisível animado" quando JS está habilitado (.js no <html>) */
+    .hero-card,
+    .insta-gallery,
+    .review {
+      opacity: 1;
+      transform: none;
+    }
+    html.js .hero-card,
+    html.js .insta-gallery,
+    html.js .review {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .hero-card {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,154,61,.2);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .hero-card.reveal { opacity: 1 !important; transform: translateY(0) !important; }
+    .hero-card.reveal.glow {
+      border-color: rgba(255,122,24,.45);
+      box-shadow: var(--shadow), 0 0 30px rgba(255,122,24,.20);
+    }
+    .hero-content h1 { font-size: 24px; margin: 0 0 12px; }
+    .hero-content p { font-size: 14px; line-height: 1.5; margin: 0 0 16px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: auto; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 20px; border-radius: 14px; background: var(--orange);
+      color: #fff; text-decoration: none; font-weight: 700; font-size: 14px;
+      transition: all .3s ease;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,122,24,.4); }
+    .btn.secondary { background: rgba(255,255,255,.1); }
+
+    /* Galeria Quadrada reduzida */
+    .insta-gallery {
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(0,0,0,.3);
+      aspect-ratio: 1 / 1;
+      position: relative;
+    }
+    .insta-gallery.reveal { opacity: 1 !important; transform: translateY(0) !important; }
+    .insta-gallery.reveal.glow {
+      border-color: rgba(255,122,24,.45);
+      box-shadow: var(--shadow), 0 0 30px rgba(255,122,24,.20);
+    }
+    .insta-gallery img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+    .insta-gallery img.active { opacity: 1; }
+    .insta-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,.7));
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+    }
+    @media (max-width: 860px) {
+      .hero-section { grid-template-columns: 1fr; }
+      .insta-gallery { width: 100%; max-width: 300px; margin: 0 auto; }
+    }
+
+    /* Ticker */
+    .ticker { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); margin-top: 30px; }
+    .ticker-track { display: flex; align-items: center; gap: 42px; padding: 18px 22px; width: max-content; animation: marquee 20s linear infinite; }
+    .logo-pill img { width: 120px; height: 160px; object-fit: contain; border-radius: 16px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); padding: 10px; }
+
+    /* Reviews */
+    .reviews { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 30px; }
+    .review {
+      grid-column: span 4;
+      border-radius: 18px;
+      border: 1px solid rgba(255,154,61,.15);
+      background: rgba(255,255,255,.05);
+      padding: 14px;
+      transition: transform .3s, border-color .8s, box-shadow .8s;
+    }
+    .review.reveal { opacity: 1 !important; transform: translateY(0) !important; }
+    .review.reveal.glow {
+      border-color: rgba(255,122,24,.45);
+      box-shadow: var(--shadow), 0 0 20px rgba(255,122,24,.18);
+    }
+    .review:hover { transform: scale(1.02); }
+    @media (max-width: 900px) { .reviews .review { grid-column: span 12; } }
+
+    /* Footer */
+    footer { border-top: 1px solid rgba(255,255,255,.06); background: rgba(6,6,6,.78); backdrop-filter: blur(8px); margin-top: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .contact-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .contact-item {
+      display: flex; align-items: center; gap: 10px; padding: 12px;
+      border-radius: 16px; border: 1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.28); text-decoration: none; color: var(--text);
+      transition: all .2s ease; position: relative; overflow: hidden;
+    }
+    .contact-item:hover { transform: translateY(-2px); background: rgba(255,122,24,.08); border-color: rgba(255,122,24,.25); }
+    .contact-item .label { display: flex; flex-direction: column; gap: 2px; }
+    .contact-item .label b { font-size: 11px; text-transform: uppercase; color: var(--yellow); letter-spacing: .04em; }
+    .contact-item .label span { font-size: 13px; color: rgba(244,244,244,.80); }
+    .icon { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(255,122,24,.25), rgba(255,216,74,.12)); }
+    .icon svg { width: 18px; height: 18px; fill: #fff; }
+    .footer-bottom { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); padding-top: 10px; }
+    .footer-bottom .slogan { color: var(--yellow); }
+    @media (max-width: 900px) { .contact-strip { grid-template-columns: 1fr; } }
+
+    /* Animations */
+    @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* Partículas sutis */
+    .focus-particle {
+      position: fixed;
+      pointer-events: none;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(255,122,24,.9), rgba(255,216,74,.4));
+      border-radius: 50%;
+      opacity: 0;
+      z-index: 5;
+      animation: particleRise 2s ease-out forwards;
+    }
+    @keyframes particleRise {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 0.8; transform: translateY(-30px) scale(1); }
+      100% { opacity: 0; transform: translateY(-180px) scale(0.6); }
+    }
+
+    /* Easter egg styles */
+    .leo-light { position: fixed; inset: -40%; pointer-events: none; z-index: 9999; background: linear-gradient(115deg, rgba(255, 122, 0, 0) 0%, rgba(255, 180, 60, 0.18) 35%, rgba(255, 220, 120, 0.10) 55%, rgba(0, 0, 0, 0) 85%); transform: translateX(-35%) rotate(6deg); animation: leoSweep 1.1s ease-out forwards; }
+    @keyframes leoSweep { to { transform: translateX(35%) rotate(6deg); } }
+    .glitch { animation: glitchShake 0.6s ease-in-out; }
+    @keyframes glitchShake { 0% { transform: translate(0); } 25% { transform: translate(-2px, 1px); } 50% { transform: translate(2px, -1px); } 75% { transform: translate(-1px, 2px); } 100% { transform: translate(0); } }
+    .leo-message { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10000; width: min(560px, calc(100vw - 32px)); padding: 20px 22px; background: rgba(10, 10, 10, 0.82); border: 1px solid rgba(255, 180, 60, 0.55); border-radius: 18px; box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(255, 122, 0, 0.08); color: #ffd08a; text-align: center; line-height: 1.25; opacity: 0; animation: popInOut 2.8s ease forwards; text-shadow: 0 2px 18px rgba(0,0,0,.75); backdrop-filter: blur(10px); }
+    .leo-message .leo-title { font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 180, 60, 0.95); margin-bottom: 8px; font-weight: 700; }
+    .leo-message .le
