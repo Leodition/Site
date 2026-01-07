@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Open Graph - só texto bonito -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Leodition | Marketing Play" />
   <meta property="og:description" content="Estúdio de marketing e comunicação: identidade visual, conteúdos, personalizações e experiências que aproximam marcas de pessoas." />
   <meta property="og:url" content="https://leodition.com.br/" />
@@ -16,61 +16,70 @@
   <style>
     :root {
       --bg: #060606;
-      --panel: rgba(18,18,18,.72);
-      --panel2: rgba(18,18,18,.55);
       --text: #f4f4f4;
       --muted: rgba(244,244,244,.72);
       --orange: #ff7a18;
       --yellow: #ffd84a;
-      --accent: #ff9a3d;
-      --border: rgba(255, 154, 61, .25);
       --shadow: 0 14px 40px rgba(0,0,0,.55);
-      --radius: 18px;
       --wa-green: #25d366;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "Apple Color Emoji","Segoe UI Emoji"; color: var(--text); background: var(--bg); overflow-x: hidden; }
-    
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
     .bg-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -3; opacity: .25; }
     .bg-video-overlay { position: fixed; inset: 0; z-index: -2; background: radial-gradient(1200px 700px at 10% 10%, rgba(255,122,24,.10), transparent 60%), radial-gradient(900px 600px at 90% 15%, rgba(255,216,74,.08), transparent 55%), radial-gradient(800px 600px at 40% 90%, rgba(255,122,24,.08), transparent 60%), linear-gradient(180deg, rgba(5,5,5,.88) 0%, rgba(7,7,7,.88) 40%, rgba(5,5,5,.90) 100%); }
     .bg-noise { position: fixed; inset: 0; z-index: -1; opacity: .20; background-image: repeating-radial-gradient(circle at 20% 30%, rgba(255,255,255,.08) 0 1px, transparent 1px 6px); filter: blur(.6px); mix-blend-mode: overlay; pointer-events: none; }
     .wrap { min-height: 100vh; display: flex; flex-direction: column; }
 
-    /* TOPBAR */
-    .topbar { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(6,6,6,.75); border-bottom: 1px solid rgba(255,154,61,.15); transition: background 0.8s ease; }
-    .topbar.focus-pulse { animation: topbarPulse 1.2s ease-out; }
-    @keyframes topbarPulse { 0% { background: rgba(6,6,6,.75); } 40% { background: rgba(6,6,6,.95); } 100% { background: rgba(6,6,6,.75); } }
-    .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .topbar { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(6,6,6,.75); border-bottom: 1px solid rgba(255,154,61,.15); }
+    .topbar-inner { max-width: 1100px; margin: 0 auto; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); animation: floating 3s ease-in-out infinite; }
-    .brand-logo { height: 65px; width: auto; filter: drop-shadow(0 0 10px rgba(255,122,24,.3)); }
-    @media (max-width: 520px) { .brand-logo { height: 38px; } }
+    .brand-logo { height: 60px; width: auto; filter: drop-shadow(0 0 10px rgba(255,122,24,.3)); }
+    @media (max-width: 520px) { .brand-logo { height: 36px; } }
+
     .nav { display: flex; align-items: center; gap: 10px; }
-    .nav a { color: rgba(244,244,244,.86); text-decoration: none; font-size: 13px; padding: 10px 12px; border-radius: 999px; transition: all .3s ease; position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: .08em; }
-    .nav a:hover { transform: translateY(-1px); background: rgba(255,122,24,.15); color: var(--yellow); }
+    .nav a {
+      color: rgba(244,244,244,.86);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      transition: all .3s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .nav a:hover { background: rgba(255,122,24,.15); color: var(--yellow); transform: translateY(-1px); }
     .nav a::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 7px; height: 2px; border-radius: 999px; background: linear-gradient(90deg, var(--yellow), var(--orange)); opacity: 0; transition: opacity .3s ease; }
     .nav a.active::after { opacity: .9; }
     .nav a.active { font-weight: 800; color: #ffffff !important; }
     .nav a.cta { background: linear-gradient(135deg, var(--yellow), var(--orange)); color: #120a00; font-weight: 700; }
-    .nav a.cta span { position: relative; z-index: 1; }
-    .nav a.cta:hover { transform: translateY(-1px); filter: brightness(1.08); box-shadow: 0 12px 28px rgba(255,122,24,.45); }
+    .nav a.cta:hover { filter: brightness(1.08); box-shadow: 0 12px 28px rgba(255,122,24,.45); }
 
-    /* MOBILE: MENU VERTICAL CENTRALIZADO */
     @media (max-width: 860px) {
-      .topbar-inner { flex-direction: column; gap: 20px; padding: 16px 18px; }
-      .brand { align-self: center; }
-      .nav { flex-direction: column; align-items: center; gap: 12px; width: 100%; }
-      .nav a { width: 100%; max-width: 320px; text-align: center; padding: 14px 20px; font-size: 14px; border-radius: 16px; }
-      .nav a.cta { max-width: 280px; font-size: 15px; }
+      .topbar-inner { padding: 10px 14px; gap: 10px; }
+      .nav { gap: 8px; }
+      .nav a { font-size: 12px; padding: 8px 10px; display: flex; align-items: center; gap: 6px; }
+      .nav svg { width: 16px; height: 16px; fill: currentColor; }
+    }
+    @media (max-width: 480px) {
+      .nav a span { display: none; }
+      .nav a { padding: 10px; }
+      .nav a.cta span { display: inline; }
     }
 
     main { flex: 1; padding: 26px 18px 12px; }
     .container { max-width: 1100px; margin: 0 auto; }
 
-    /* HERO + GALERIA */
     .hero-section { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: stretch; }
     .hero-card { border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,154,61,.2); background: rgba(255,255,255,.06); box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
     .hero-card.reveal { opacity: 1; transform: translateY(0); }
-    .hero-card.reveal.glow { border-color: rgba(255,122,24,.45); box-shadow: var(--shadow), 0 0 30px rgba(255,122,24,.20); }
     .hero-content h1 { font-size: 24px; margin: 0 0 12px; }
     .hero-content p { font-size: 14px; line-height: 1.5; margin: 0 0 16px; }
     .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: auto; }
@@ -79,29 +88,27 @@
     .btn.secondary { background: rgba(255,255,255,.1); }
     .insta-gallery { border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.1); background: rgba(0,0,0,.3); aspect-ratio: 1 / 1; position: relative; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
     .insta-gallery.reveal { opacity: 1; transform: translateY(0); }
-    .insta-gallery.reveal.glow { border-color: rgba(255,122,24,.45); box-shadow: var(--shadow), 0 0 30px rgba(255,122,24,.20); }
     .insta-gallery img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease; }
     .insta-gallery img.active { opacity: 1; }
     .insta-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,.7)); color: #fff; font-size: 12px; text-align: center; }
     @media (max-width: 860px) { .hero-section { grid-template-columns: 1fr; } .insta-gallery { width: 100%; max-width: 300px; margin: 0 auto; } }
 
-    /* TICKER, REVIEWS, FOOTER - mantidos originais */
     .ticker { position: relative; overflow: hidden; border-radius: 18px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.03); margin-top: 30px; }
     .ticker-track { display: flex; align-items: center; gap: 42px; padding: 18px 22px; width: max-content; animation: marquee 20s linear infinite; }
     .logo-pill img { width: 120px; height: 160px; object-fit: contain; border-radius: 16px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); padding: 10px; }
+
     .reviews { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; margin-top: 30px; }
-    .review { grid-column: span 4; border-radius: 18px; border: 1px solid rgba(255,154,61,.15); background: rgba(255,255,255,.05); padding: 14px; transition: transform .3s, border-color .8s, box-shadow .8s; opacity: 0; transform: translateY(20px); }
+    .review { grid-column: span 4; border-radius: 18px; border: 1px solid rgba(255,154,61,.15); background: rgba(255,255,255,.05); padding: 14px; opacity: 0; transform: translateY(20px); transition: transform .3s; }
     .review.reveal { opacity: 1; transform: translateY(0); }
-    .review.reveal.glow { border-color: rgba(255,122,24,.45); box-shadow: var(--shadow), 0 0 20px rgba(255,122,24,.18); }
     .review:hover { transform: scale(1.02); }
     @media (max-width: 900px) { .reviews .review { grid-column: span 12; } }
+
     footer { border-top: 1px solid rgba(255,255,255,.06); background: rgba(6,6,6,.78); backdrop-filter: blur(8px); margin-top: 40px; }
     .footer-inner { max-width: 1100px; margin: 0 auto; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
     .contact-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .contact-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(0,0,0,.28); text-decoration: none; color: var(--text); transition: all .2s ease; position: relative; overflow: hidden; }
+    .contact-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(0,0,0,.28); text-decoration: none; color: var(--text); transition: all .2s ease; }
     .contact-item:hover { transform: translateY(-2px); background: rgba(255,122,24,.08); border-color: rgba(255,122,24,.25); }
-    .contact-item .label { display: flex; flex-direction: column; gap: 2px; }
-    .contact-item .label b { font-size: 11px; text-transform: uppercase; color: var(--yellow); letter-spacing: .04em; }
+    .contact-item .label b { font-size: 11px; text-transform: uppercase; color: var(--yellow); }
     .contact-item .label span { font-size: 13px; color: rgba(244,244,244,.80); }
     .icon { width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(255,122,24,.25), rgba(255,216,74,.12)); }
     .icon svg { width: 18px; height: 18px; fill: #fff; }
@@ -112,7 +119,6 @@
     @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-    /* BOTÃO WHATSAPP FLUTUANTE */
     .wa-floating {
       position: fixed;
       bottom: 24px;
@@ -127,21 +133,18 @@
       z-index: 90;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s, transform 0.3s ease;
+      transition: opacity 0.4s ease, transform 0.3s ease;
       transform: scale(0.8);
     }
     .wa-floating.visible {
       opacity: 1;
       visibility: visible;
       transform: scale(1);
+      animation: waPulse 2.5s infinite;
     }
     .wa-floating svg { width: 36px; height: 36px; fill: #fff; }
     @keyframes waPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,.5); } 70% { box-shadow: 0 0 0 14px rgba(37,211,102,0); } 100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); } }
-    .wa-floating.visible { animation: waPulse 2.5s infinite; }
     @media (min-width: 861px) { .wa-floating { display: none; } }
-
-    /* Animações e easter eggs originais (mantidos) */
-    /* ... (coloque aqui todos os @keyframes e classes de animação que você tinha antes: particleRise, leo-light, glitch, etc.) ... */
   </style>
 </head>
 <body>
@@ -158,21 +161,38 @@
           <img class="brand-logo" src="assets/img/logo/leologo.png" alt="Leodition">
         </a>
         <nav class="nav">
-          <a class="active" href="index.html">PÁGINA INICIAL</a>
-          <a href="servicos.html">SERVIÇOS</a>
-          <a href="portfolio.html">PROJETOS</a>
-          <a href="loja.html">LOJA</a>
-          <a class="cta" href="fale-com-a-gente.html"><span>FALE COM A GENTE</span></a>
+          <a href="index.html" class="active" aria-label="Início">
+            <svg viewBox="0 0 24 24">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span>Início</span>
+          </a>
+          <a href="servicos.html">
+            <svg viewBox="0 0 24 24">
+              <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+            </svg>
+            <span>Serviços</span>
+          </a>
+          <a href="portfolio.html">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 4h16v12H5.17L4 17.17V4m0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4zm2 10h12v2H6v-2zm0-3h12v2H6V9zm0-3h12v2H6V6z"/>
+            </svg>
+            <span>Projetos</span>
+          </a>
+          <a href="loja.html">
+            <svg viewBox="0 0 24 24">
+              <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM17 18c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7.17 3l-1.4 2H3v3h2l3.62 7.6L7.83 18h10.34l3.62-7.6L22 7h-4.17L15 3H7.17zM8.5 5h7l1.33 4H6.17L8.5 5z"/>
+            </svg>
+            <span>Loja</span>
+          </a>
+          <a class="cta" href="fale-com-a-gente.html">
+            <span>Fale com a gente</span>
+          </a>
         </nav>
       </div>
     </header>
 
-    <!-- BOTÃO WHATSAPP FLUTUANTE -->
-    <a href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto"
-       class="wa-floating"
-       target="_blank"
-       rel="noopener"
-       id="waButton">
+    <a href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto" class="wa-floating" target="_blank" rel="noopener" id="waButton">
       <svg viewBox="0 0 24 24">
         <path d="M20.5 3.5A11 11 0 003.7 18.6L2 22l3.6-1.6A11 11 0 1020.5 3.5zM12 20a8.9 8.9 0 01-4.5-1.2l-.3-.2-2.1.9.9-2.1-.2-.3A9 9 0 1112 20zm5-6.7c-.3-.1-1.8-.9-2-.9s-.4-.1-.6.1-.7.9-.9 1-.3.2-.6.1a7.2 7.2 0 01-2.1-1.3 7.9 7.9 0 01-1.5-1.9c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.1-.3.2-.4 0-.1 0-.3-.1-.4s-.6-1.5-.9-2-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.7-.8 1.7.8 2 1 2.3a9.2 9.2 0 003.5 3.6c2 1.1 2 1 2.4.9s1.3-.5 1.5-1 .2-1 .1-1.1-.2-.2-.5-.3z"/>
       </svg>
@@ -180,17 +200,106 @@
 
     <main>
       <div class="container">
-        <!-- Seu conteúdo original da home (hero, ticker, reviews) -->
-        <!-- ... (tudo que você já tinha) ... -->
+        <section class="hero-section">
+          <div class="hero-card">
+            <div class="hero-content">
+              <h1>SOBRE A EMPRESA</h1>
+              <p>A Leodition é um estúdio de marketing e comunicação para pequenos negócios: identidade visual, conteúdos, personalizações e experiências que aproximam marcas de pessoas.</p>
+              <p>Sem fórmula pronta. A gente entende, pensa junto e cria o que funciona.</p>
+              <div class="hero-actions">
+                <a class="btn" href="servicos.html">Ver Serviços</a>
+                <a class="btn secondary" href="fale-com-a-gente.html">Pedir Orçamento</a>
+              </div>
+            </div>
+          </div>
+          <div class="insta-gallery" id="insta-gallery">
+            <img src="assets/img/galeria/foto1.jpg" alt="Foto 1" class="active">
+            <img src="assets/img/galeria/foto2.jpg" alt="Foto 2">
+            <img src="assets/img/galeria/foto3.jpg" alt="Foto 3">
+            <img src="assets/img/galeria/foto4.jpg" alt="Foto 4">
+            <img src="assets/img/galeria/foto5.jpg" alt="Foto 5">
+            <img src="assets/img/galeria/foto6.jpg" alt="Foto 6">
+            <div class="insta-caption">Galeria de trabalhos</div>
+          </div>
+        </section>
+
+        <section style="margin-top: 40px;">
+          <h2 style="font-size: 18px; margin-bottom: 6px;">PARCEIROS</h2>
+          <p style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">Empresas que acreditam e acreditaram na Leodition.</p>
+          <div class="ticker">
+            <div class="ticker-track">
+              <div class="logo-pill"><img src="assets/img/parceiros/quadrado.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/andreabm.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/marimodas.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/osmarket.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/epsescola.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/andreabm.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/marimodas.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/osmarket.png" alt="P"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 40px;">
+            <h2 style="font-size: 18px; margin-bottom: 6px;">AVALIAÇÕES</h2>
+          </div>
+          <div class="reviews">
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;"><img src="assets/img/clientes/cliente-1.png" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Ledition, é para mim peça fundamental para o desenvolvimento da minha marca, impulsionando assim meu negócio. Leodition é uma empresa ágil, focada, com flexibilidade de atendimento sempre focado no resultado. Super recomendo.”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Andrea Bidigaray</b><br><span style="color:var(--muted);">Massoterapeuta</span></div>
+            </article>
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;"><img src="assets/img/clientes/cliente-2.png" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Eficientes, gentis e extremamente criativos! Atendimento impecável!”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Tanise Ventura</b><br><span style="color:var(--muted);">Corretora</span></div>
+            </article>
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;"><img src="assets/img/clientes/cliente-3.png" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Fiz cartões de visita, amei!.”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Luan Costa</b><br><span style="color:var(--muted);">Vendedora</span></div>
+            </article>
+          </div>
+        </section>
       </div>
     </main>
 
     <footer>
-      <!-- Seu footer original -->
+      <div class="footer-inner">
+        <div class="contact-strip">
+          <a class="contact-item" href="mailto:comercial@leodition.com.br?subject=Contato%20-%20Leodition%20Marketing%20Play" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+            <div class="label"><b>E-mail</b><span>comercial@leodition.com.br</span></div>
+          </a>
+          <a class="contact-item" href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 003.7 18.6L2 22l3.6-1.6A11 11 0 1020.5 3.5zM12 20a8.9 8.9 0 01-4.5-1.2l-.3-.2-2.1.9.9-2.1-.2-.3A9 9 0 1112 20zm5-6.7c-.3-.1-1.8-.9-2-.9s-.4-.1-.6.1-.7.9-.9 1-.3.2-.6.1a7.2 7.2 0 01-2.1-1.3 7.9 7.9 0 01-1.5-1.9c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.1-.3.2-.4 0-.1 0-.3-.1-.4s-.6-1.5-.9-2-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.7-.8 1.7.8 2 1 2.3a9.2 9.2 0 003.5 3.6c2 1.1 2 1 2.4.9s1.3-.5 1.5-1 .2-1 .1-1.1-.2-.2-.5-.3z"/></svg></div>
+            <div class="label"><b>WhatsApp</b><span>51 9 9891-1304</span></div>
+          </a>
+          <a class="contact-item" href="https://www.instagram.com/leodition/" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm10 2H7a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3zm-5 3.5A4.5 4.5 0 1112 16a4.5 4.5 0 010-9zm0 2A2.5 2.5 0 1014.5 12 2.5 2.5 0 0012 9.5zM17.8 6.2a1 1 0 11-1 1 1 1 0 011-1z"/></svg></div>
+            <div class="label"><b>Instagram</b><span>@Leodition</span></div>
+          </a>
+          <a class="contact-item" href="https://www.linkedin.com/company/leodition" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 24V7.98h5V24H0zm7.5 0h5V15.5c0-2.25.5-4 3.25-4 2.72 0 2.75 2.55 2.75 4.15V24h5V14.5C23.5 9.85 21 7.5 17 7.5c-1.92 0-3.2 1.05-3.75 2.05h-.05V7.98h-5V24z"/></svg></div>
+            <div class="label"><b>LinkedIn</b><span>/company/leodition</span></div>
+          </a>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2025 Leodition – Marketing Play.</div>
+          <div class="slogan">Entende. Pensa. Cria.</div>
+        </div>
+      </div>
     </footer>
   </div>
 
-  <!-- SCRIPT PARA CONTROLAR O BOTÃO WHATSAPP -->
   <script>
     const waButton = document.getElementById('waButton');
     const topbar = document.getElementById('topbar');
@@ -208,13 +317,23 @@
       lastScrollY = currentScrollY;
     }
 
-    window.addEventListener('scroll', () => {
-      requestAnimationFrame(updateWA);
-    });
-
-    updateWA(); // estado inicial
+    window.addEventListener('scroll', updateWA);
+    updateWA();
   </script>
 
-  <!-- Seus outros scripts (galeria, easter eggs, stats, etc.) continuam aqui -->
+  <script>
+    (function() {
+      const gallery = document.getElementById('insta-gallery');
+      const imgs = gallery.querySelectorAll('img');
+      if (imgs.length <= 1) return;
+      let current = 0;
+      imgs[current].classList.add('active');
+      setInterval(() => {
+        imgs[current].classList.remove('active');
+        current = (current + 1) % imgs.length;
+        imgs[current].classList.add('active');
+      }, 5000);
+    })();
+  </script>
 </body>
 </html>
