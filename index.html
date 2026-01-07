@@ -289,4 +289,423 @@
     @keyframes glitchShake { 0% { transform: translate(0); } 25% { transform: translate(-2px, 1px); } 50% { transform: translate(2px, -1px); } 75% { transform: translate(-1px, 2px); } 100% { transform: translate(0); } }
     .leo-message { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10000; width: min(560px, calc(100vw - 32px)); padding: 20px 22px; background: rgba(10, 10, 10, 0.82); border: 1px solid rgba(255, 180, 60, 0.55); border-radius: 18px; box-shadow: 0 18px 60px rgba(0, 0, 0, 0.6), 0 0 0 6px rgba(255, 122, 0, 0.08); color: #ffd08a; text-align: center; line-height: 1.25; opacity: 0; animation: popInOut 2.8s ease forwards; text-shadow: 0 2px 18px rgba(0,0,0,.75); backdrop-filter: blur(10px); }
     .leo-message .leo-title { font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 180, 60, 0.95); margin-bottom: 8px; font-weight: 700; }
-    .leo-message .le
+    .leo-message .leo-text { font-size: clamp(1.1rem, 2.8vw, 1.6rem); font-weight: 600; }
+    @keyframes popInOut { 0% { opacity: 0; transform: translate(-50%, -48%) scale(0.96); } 18% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 82% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -52%) scale(0.98); } }
+    .leo-smoke { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0; animation: smokeFade 2.2s ease forwards; }
+    @keyframes smokeFade { 0% { opacity: 0; } 20% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
+    .leo-smoke::before, .leo-smoke::after { content: ""; position: absolute; left: -20%; bottom: -40%; width: 140%; height: 90%; background: radial-gradient(closest-side, rgba(255,122,0,0.22), rgba(255,122,0,0) 60%), radial-gradient(closest-side, rgba(255,200,120,0.18), rgba(255,200,120,0) 65%); filter: blur(22px); animation: smokeRise 2.2s ease-in-out forwards; mix-blend-mode: screen; }
+    .leo-smoke::after { bottom: -55%; filter: blur(30px); opacity: 0.8; }
+    @keyframes smokeRise { 0% { transform: translateY(70px) scale(1); } 60% { transform: translateY(-25px) scale(1.05); } 100% { transform: translateY(-50px) scale(1.08); } }
+    .secret-mode { animation: secretBright 1.5s infinite alternate; }
+    body.secret-mode::before { background: radial-gradient(1200px 700px at 10% 10%, rgba(255,122,24,.26), transparent 60%), radial-gradient(900px 600px at 90% 15%, rgba(255,216,74,.22), transparent 55%), radial-gradient(800px 600px at 40% 90%, rgba(255,122,24,.18), transparent 60%), linear-gradient(120deg, #000 0%, #ff7a00 45%, #ffd000 100%); }
+    @keyframes secretBright { from { filter: brightness(1); } to { filter: brightness(1.15); } }
+  </style>
+</head>
+
+<body>
+  <!-- VÍDEO DE FUNDO (com preload leve pra não travar) -->
+  <video class="bg-video" autoplay muted loop playsinline preload="metadata">
+    <source src="assets/video/fundoleodition.mp4" type="video/mp4">
+  </video>
+  <div class="bg-video-overlay" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">
+          <img class="brand-logo" src="assets/img/logo/leologo.png" alt="Leodition">
+        </a>
+        <nav class="nav">
+          <a class="active" href="index.html">PÁGINA INICIAL</a>
+          <a href="servicos.html">SERVIÇOS</a>
+          <a href="portfolio.html">PROJETOS</a>
+          <a href="loja.html">LOJA</a>
+          <a class="cta" href="fale-com-a-gente.html"><span>FALE COM A GENTE</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="hero-section">
+          <div class="hero-card">
+            <div class="hero-content">
+              <h1>SOBRE A EMPRESA</h1>
+              <p>A Leodition é um estúdio de marketing e comunicação para pequenos negócios: identidade visual, conteúdos, personalizações e experiências que aproximam marcas de pessoas.</p>
+              <p>Sem fórmula pronta. A gente entende, pensa junto e cria o que funciona.</p>
+              <div class="hero-actions">
+                <a class="btn" href="servicos.html">Ver Serviços</a>
+                <a class="btn secondary" href="fale-com-a-gente.html">Pedir Orçamento</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="insta-gallery" id="insta-gallery">
+            <img src="assets/img/galeria/foto1.jpg" alt="Foto 1" class="active">
+            <img src="assets/img/galeria/foto2.jpg" alt="Foto 2">
+            <img src="assets/img/galeria/foto3.jpg" alt="Foto 3">
+            <img src="assets/img/galeria/foto4.jpg" alt="Foto 4">
+            <img src="assets/img/galeria/foto5.jpg" alt="Foto 5">
+            <img src="assets/img/galeria/foto6.jpg" alt="Foto 6">
+            <div class="insta-caption">Galeria de trabalhos</div>
+          </div>
+        </section>
+
+        <section class="section" style="margin-top: 40px;">
+          <div class="section-head">
+            <h2 style="font-size: 18px; margin-bottom: 6px;">PARCEIROS</h2>
+            <p style="font-size: 14px; color: var(--muted); margin-bottom: 12px;">Logos passando suavemente — você troca as imagens depois.</p>
+          </div>
+
+          <div class="ticker">
+            <div class="ticker-track">
+              <div class="logo-pill"><img src="assets/img/parceiros/quadrado.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/andreabm.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/marimodas.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/osmarket.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/epsescola.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/andreabm.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/marimodas.png" alt="P"></div>
+              <div class="logo-pill"><img src="assets/img/parceiros/osmarket.png" alt="P"></div>
+            </div>
+          </div>
+
+          <div style="margin-top: 40px;">
+            <h2 style="font-size: 18px; margin-bottom: 6px;">AVALIAÇÕES</h2>
+          </div>
+
+          <div class="reviews">
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;">
+                  <img src="assets/img/clientes/cliente-1.png" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Ledition, é para mim peça fundamental para o desenvolvimento da minha marca, impulsionando assim meu negócio.
+Leodition é uma empresa ágil, focada, com flexibilidade de atendimento sempre focado no resultado .
+Super recomendo.”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Andrea Bidigaray</b><br><span style="color:var(--muted);">Massoterapeuta</span></div>
+            </article>
+
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;">
+                  <img src="assets/img/clientes/cliente-2.png" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Eficientes, gentis e extremamente criativos! Atendimento impecável!”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Tanise Ventura</b><br><span style="color:var(--muted);">Corretora</span></div>
+            </article>
+
+            <article class="review">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;">
+                  <img src="assets/img/clientes/cliente-3.png" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div style="color:var(--yellow); font-size:12px;">★★★★★</div>
+              </div>
+              <p style="font-size:13px;">“Fiz cartões de visita, amei!.”</p>
+              <div style="margin-top:10px; font-size:12px;"><b style="color:var(--orange);">Luan Costa</b><br><span style="color:var(--muted);">Vendedora</span></div>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-inner">
+        <div class="contact-strip">
+          <a class="contact-item" href="mailto:comercial@leodition.com.br?subject=Contato%20-%20Leodition%20Marketing%20Play" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+            <div class="label"><b>E-mail</b><span>comercial@leodition.com.br</span></div>
+          </a>
+
+          <a class="contact-item" href="https://wa.me/55519891304?text=Oi%20Leodition!%20Quero%20falar%20sobre%20um%20projeto." target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M20.5 3.5A11 11 0 003.7 18.6L2 22l3.6-1.6A11 11 0 1020.5 3.5zM12 20a8.9 8.9 0 01-4.5-1.2l-.3-.2-2.1.9.9-2.1-.2-.3A9 9 0 1112 20zm5-6.7c-.3-.1-1.8-.9-2-.9s-.4-.1-.6.1-.7.9-.9 1-.3.2-.6.1a7.2 7.2 0 01-2.1-1.3 7.9 7.9 0 01-1.5-1.9c-.2-.3 0-.5.1-.6l.4-.5c.1-.1.1-.3.2-.4 0-.1 0-.3-.1-.4s-.6-1.5-.9-2-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3s-.8.7-.8 1.7.8 2 1 2.3a9.2 9.2 0 003.5 3.6c2 1.1 2 1 2.4.9s1.3-.5 1.5-1 .2-1 .1-1.1-.2-.2-.5-.3z"/></svg></div>
+            <div class="label"><b>WhatsApp</b><span>51 9 9891-1304</span></div>
+          </a>
+
+          <a class="contact-item" href="https://www.instagram.com/leodition/" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm10 2H7a3 3 0 00-3 3v10a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3zm-5 3.5A4.5 4.5 0 1112 16a4.5 4.5 0 010-9zm0 2A2.5 2.5 0 1014.5 12 2.5 2.5 0 0012 9.5zM17.8 6.2a1 1 0 11-1 1 1 1 0 011-1z"/></svg></div>
+            <div class="label"><b>Instagram</b><span>@Leodition</span></div>
+          </a>
+
+          <a class="contact-item" href="https://www.linkedin.com/company/leodition" target="_blank" rel="noopener">
+            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 24V7.98h5V24H0zm7.5 0h5V15.5c0-2.25.5-4 3.25-4 2.72 0 2.75 2.55 2.75 4.15V24h5V14.5C23.5 9.85 21 7.5 17 7.5c-1.92 0-3.2 1.05-3.75 2.05h-.05V7.98h-5V24z"/></svg></div>
+            <div class="label"><b>LinkedIn</b><span>/company/leodition</span></div>
+          </a>
+        </div>
+
+        <div class="footer-bottom">
+          <div>© 2025 Leodition – Marketing Play.</div>
+          <div class="slogan">Entende. Pensa. Cria.</div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    /* Rotação da galeria (só se existir) */
+    (function() {
+      const gallery = document.getElementById('insta-gallery');
+      if (!gallery) return;
+      const imgs = gallery.querySelectorAll('img');
+      if (!imgs || imgs.length <= 1) return;
+      let current = 0;
+      imgs[current].classList.add('active');
+      setInterval(() => {
+        imgs[current].classList.remove('active');
+        current = (current + 1) % imgs.length;
+        imgs[current].classList.add('active');
+      }, 5000);
+    })();
+
+    /* Modo secreto LEO (mantido) */
+    (function () {
+      const secretWord = "LEO";
+      let buffer = "";
+      window.addEventListener("keydown", (e) => {
+        if (e.key.length !== 1) return;
+        buffer = (buffer + e.key).toUpperCase();
+        buffer = buffer.slice(-secretWord.length);
+        if (buffer === secretWord) {
+          document.body.classList.toggle("secret-mode");
+          buffer = "";
+        }
+      });
+    })();
+
+    /* Easter egg "leo" */
+    let typed = '';
+    const secret = 'leo';
+    let activated = false;
+    document.addEventListener('keydown', (e) => {
+      if (activated) return;
+      const key = (e.key || '').toLowerCase();
+      if (key.length !== 1) return;
+      typed += key;
+      if (!secret.startsWith(typed)) typed = key;
+      if (typed === secret) activateLeo();
+    });
+
+    function activateLeo() {
+      activated = true;
+      const smoke = document.createElement('div');
+      smoke.className = 'leo-smoke';
+      document.body.appendChild(smoke);
+
+      const light = document.createElement('div');
+      light.className = 'leo-light';
+      document.body.appendChild(light);
+
+      setTimeout(() => document.body.classList.add('glitch'), 500);
+
+      setTimeout(() => {
+        const msg = document.createElement('div');
+        msg.className = 'leo-message';
+        msg.innerHTML = `
+          <div class="leo-title">Easter Egg</div>
+          <div class="leo-text">Criar também é bagunçar um pouco.</div>
+        `;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
+      }, 650);
+
+      setTimeout(() => {
+        document.body.classList.remove('glitch');
+        light.remove();
+        smoke.remove();
+      }, 2400);
+    }
+
+    /* Efeitos ao voltar à aba */
+    let hasRunFocus = false;
+    function onFocusReturn() {
+      if (hasRunFocus) return;
+      hasRunFocus = true;
+
+      const topbar = document.querySelector('.topbar');
+      if (topbar) topbar.classList.add('focus-pulse');
+
+      const heroCard = document.querySelector('.hero-card');
+      const instaGallery = document.querySelector('.insta-gallery');
+      const reviews = document.querySelectorAll('.review');
+
+      if (heroCard) {
+        heroCard.classList.add('reveal', 'glow');
+        setTimeout(() => heroCard.classList.remove('glow'), 1000);
+      }
+      if (instaGallery) {
+        instaGallery.classList.add('reveal', 'glow');
+        setTimeout(() => instaGallery.classList.remove('glow'), 1000);
+      }
+      reviews.forEach((review, i) => {
+        setTimeout(() => {
+          review.classList.add('reveal', 'glow');
+          setTimeout(() => review.classList.remove('glow'), 1000);
+        }, i * 150);
+      });
+
+      for (let i = 0; i < 9; i++) {
+        const p = document.createElement('div');
+        p.className = 'focus-particle';
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.bottom = '-10px';
+        p.style.animationDelay = Math.random() * 0.6 + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 2200);
+      }
+
+      setTimeout(() => { hasRunFocus = false; }, 3000);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) onFocusReturn();
+    });
+    window.addEventListener('focus', onFocusReturn);
+
+    window.addEventListener('load', () => {
+      const heroCard = document.querySelector('.hero-card');
+      const instaGallery = document.querySelector('.insta-gallery');
+      const reviews = document.querySelectorAll('.review');
+
+      if (heroCard) setTimeout(() => heroCard.classList.add('reveal'), 200);
+      if (instaGallery) setTimeout(() => instaGallery.classList.add('reveal'), 400);
+      reviews.forEach((review, i) => {
+        setTimeout(() => review.classList.add('reveal'), 600 + i * 150);
+      });
+    });
+  </script>
+
+  <script>
+    // === CONTADORES DE ESTATÍSTICAS (localStorage) ===
+    const stats = {
+      get: () => JSON.parse(localStorage.getItem('leodition_stats') || '{}'),
+      save: (data) => localStorage.setItem('leodition_stats', JSON.stringify(data)),
+      increment: (key) => {
+        let data = stats.get();
+        data[key] = (data[key] || 0) + 1;
+        stats.save(data);
+      }
+    };
+
+    // ✅ HOME: conta como HOME (não como LOJA)
+    stats.increment('visitas_total');
+    stats.increment('aba_home');
+
+    // Função para registrar visualização de categoria/produto (usada na LOJA)
+    function registrarVisualizacaoCategoria(nomeCategoria) {
+      let data = stats.get();
+      data.visualizacoes_categorias = data.visualizacoes_categorias || {};
+      data.visualizacoes_categorias[nomeCategoria] = (data.visualizacoes_categorias[nomeCategoria] || 0) + 1;
+
+      let max = 0;
+      let maisVisto = 'Nenhum ainda';
+      for (let cat in data.visualizacoes_categorias) {
+        if (data.visualizacoes_categorias[cat] > max) {
+          max = data.visualizacoes_categorias[cat];
+          maisVisto = `${cat} (${max} ${max === 1 ? 'vez' : 'vezes'})`;
+        } else if (data.visualizacoes_categorias[cat] === max && max > 0) {
+          maisVisto += ` | ${cat} (${max === 1 ? 'vez' : 'vezes'})`;
+        }
+      }
+      data.categoria_mais_vista = maisVisto || 'Nenhum ainda';
+      stats.save(data);
+    }
+
+    // ✅ Proteção: só tenta adicionar evento se existir .card-link (ou seja: na LOJA)
+    (function(){
+      const cardLinks = document.querySelectorAll('.card-link');
+      if (!cardLinks || cardLinks.length === 0) return;
+      // Se estiver na loja, ajuste os contadores conforme tua regra da loja
+      // (Se você quiser manter LOJA em outro arquivo, melhor colocar esse bloco lá)
+      cardLinks.forEach(link => {
+        const h3 = link.querySelector('h3');
+        if (!h3) return;
+        const titulo = h3.textContent.trim();
+        link.addEventListener('click', () => {
+          registrarVisualizacaoCategoria(titulo);
+        });
+      });
+    })();
+
+    // === PAINEL SECRETO COM PALAVRA "DANIEL" ===
+    let buffer = '';
+    const PALAVRA_SECRETA = 'daniel';
+    let panelAberto = false;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key.length === 1) {
+        buffer += e.key.toLowerCase();
+        if (buffer.length > PALAVRA_SECRETA.length) {
+          buffer = buffer.slice(-PALAVRA_SECRETA.length);
+        }
+        if (buffer === PALAVRA_SECRETA) {
+          buffer = '';
+          toggleAdminPanel();
+        }
+      } else if (e.key === 'Backspace') {
+        buffer = buffer.slice(0, -1);
+      } else {
+        buffer = '';
+      }
+    });
+
+    function toggleAdminPanel() {
+      if (panelAberto) {
+        document.getElementById('adminPanel')?.remove();
+        panelAberto = false;
+        return;
+      }
+
+      const data = stats.get();
+
+      const abas = {
+        aba_home: data.aba_home || 0,
+        aba_servicos: data.aba_servicos || 0,
+        aba_projetos: data.aba_projetos || 0,
+        aba_loja: data.aba_loja || 0,
+        aba_contato: data.aba_contato || 0
+      };
+
+      const nomesAbas = {
+        aba_home: 'Página Inicial',
+        aba_servicos: 'Serviços',
+        aba_projetos: 'Projetos',
+        aba_loja: 'Loja',
+        aba_contato: 'Fale com a Gente'
+      };
+
+      const panel = document.createElement('div');
+      panel.id = 'adminPanel';
+      panel.innerHTML = `
+        <div style="position:fixed;top:20px;right:20px;width:400px;background:rgba(18,18,18,.95);border:1px solid rgba(255,122,24,.4);border-radius:18px;padding:20px;color:#f4f4f4;font-family:system-ui;z-index:9999;box-shadow:0 20px 50px rgba(0,0,0,.8);backdrop-filter:blur(12px);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+            <h3 style="margin:0;font-size:19px;color:#ffd84a;">Painel Administrativo</h3>
+            <button onclick="this.closest('#adminPanel').remove();panelAberto=false" style="background:none;border:none;color:#ff7a18;font-size:24px;cursor:pointer;line-height:1;">×</button>
+          </div>
+          <div style="font-size:14px;line-height:1.7;">
+            <p><strong>Visitas totais:</strong> ${data.visitas_total || 0}</p>
+            <p><strong>Cliques nas abas:</strong></p>
+            <ul style="margin:6px 0 14px;padding-left:22px;font-size:13px;">
+              ${Object.keys(abas).map(key => `<li>${nomesAbas[key]}: <strong>${abas[key]}</strong></li>`).join('')}
+            </ul>
+            <p><strong>Categoria mais visualizada na loja:</strong><br>
+              <span style="color:#ffd84a;font-size:15px;">${data.categoria_mais_vista || 'Nenhum ainda'}</span>
+            </p>
+            <small style="color:#aaa;display:block;margin-top:20px;font-size:12px;">
+              Digite "daniel" novamente para fechar.<br>
+              Dados salvos só no seu navegador.
+            </small>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(panel);
+      panelAberto = true;
+    }
+  </script>
+</body>
+</html>
