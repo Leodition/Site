@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Leodition Docs</title>
+<style>
+/* Interface do Gerador */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #f0f2f5, #e0e4e9);
+    padding: 20px;
+    margin: 0;
+}
+.container {
+    max-width: 980px;
+    margin: auto;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.grid-2, .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+.form input, .form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+.radio-group {
+    display: flex;
+    gap: 32px;
+    margin: 20px 0;
+    font-size: 1.15em;
+}
+.produto {
+    border: 1px solid #e5e7eb;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+/* ==================== DOCUMENTO FINAL (AJUSTE DE CORTE) ==================== */
+.documento {
+    margin: 40px auto;
+    padding: 45px 40px;
+    max-width: 794px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+    /* Evita corte de palavras */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 35px; }
+.logo { max-width: 160px; max-height: 80px; object-fit: contain; }
+.company-info { 
+    text-align: right; 
+    max-width: 50%; 
+    word-wrap: break-word;
+}
+.tipo-doc { text-align: center; font-size: 22px; font-weight: 600; margin: 0 0 25px; }
+
+.client-box {
+    border: 1px solid #cbd5e1;
+    padding: 16px;
+    border-radius: 8px;
+    background: #f8fafc;
+    margin: 20px 0 30px;
+    line-height: 1.4;
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    table-layout: fixed; /* Força a tabela a respeitar a largura */
+}
+.tabela th { padding: 12px; text-align: left; color: white; }
+.tabela td { 
+    padding: 11px; 
+    border-bottom: 1px solid #e5e7eb; 
+    word-wrap: break-word; 
+}
+.tabela tr:nth-child(even) { background: #f9fafb; }
+
+.total { text-align: right; font-size: 22px; font-weight: bold; margin: 30px 0 45px; }
+.condicoes { margin-top: 30px; font-size: 14px; line-height: 1.5; color: #4b5563; }
+.footer {
+    text-align: center;
+    font-size: 11px;
+    color: #666;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 50px;
+}
+
+/* ==================== CONFIGURAÇÃO DE IMPRESSÃO ==================== */
+@page {
+    size: A4 portrait;
+    margin: 15mm; /* Margem de segurança para impressoras comuns */
+}
+
+@media print {
+    body { background: white !important; padding: 0 !important; margin: 0 !important; }
+    .form, h2, h3, button, .color-section, #printBtn { display: none !important; }
+    .container { box-shadow: none !important; border: none !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+    
+    .documento {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .tabela { width: 100% !important; }
+}
+
+/* Temas */
+.theme-azul .tipo-doc { color: #1d4ed8; }
+.theme-azul .tabela th { background: #1d4ed8; }
+.theme-azul .total { color: #3b82f6; }
+.theme-preto .tipo-doc { color: #111827; }
+.theme-preto .tabela th { background: #111827; }
+.theme-preto .total { color: #374151; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form">
+        <h2>Leodition Docs – Gerador</h2>
+        <div class="radio-group">
+            <label><input type="radio" name="tipo" value="Recibo" checked> Recibo</label>
+            <label><input type="radio" name="tipo" value="Orçamento"> Orçamento</label>
+        </div>
+
+        <h3>Dados da Empresa</h3>
+        <div class="grid-3">
+            <input id="empresa" placeholder="Nome da empresa *">
+            <input id="slogan" placeholder="Slogan (opcional)">
+            <input id="email" placeholder="Email">
+            <input id="telefone" placeholder="Telefone / WhatsApp">
+            <input id="cnpj" placeholder="CNPJ">
+            <input id="endereco" placeholder="Endereço">
+            <input id="numero" placeholder="Nº">
+            <input id="cidade" placeholder="Cidade">
+            <input id="estado" placeholder="UF">
+            <input id="cep" placeholder="CEP">
+        </div>
+
+        <label>Logo (opcional)</label>
+        <input type="file" id="logoInput" accept="image/*">
+
+        <h3>Dados do Cliente</h3>
+        <div class="grid-2">
+            <input id="cliente" placeholder="Nome / Razão Social *">
+            <input id="telCliente" placeholder="Telefone / WhatsApp">
+            <input id="emailCliente" placeholder="Email">
+        </div>
+
+        <textarea id="solicitacao" placeholder="Solicitação / Descrição do serviço" rows="3"></textarea>
+
+        <h3>Condições / Pagamento</h3>
+        <div class="grid-2">
+            <input id="validade" placeholder="Validade (ex: 15 dias)">
+            <input id="pagamento" placeholder="Forma de pagamento">
+        </div>
+        <textarea id="condicoes" placeholder="Observações importantes..." rows="3"></textarea>
+
+        <h3>Itens</h3>
+        <div id="produtos"></div>
+        <button onclick="addProduto()">+ Adicionar item</button>
+
+        <div class="color-section">
+            <strong>Estilo:</strong><br>
+            <div class="radio-group" style="margin: 10px 0;">
+                <label><input type="radio" name="cor" value="azul" checked> Azul corporativo</label>
+                <label><input type="radio" name="cor" value="preto"> Preto elegante</label>
+            </div>
+        </div>
+
+        <br>
+        <button onclick="gerar()" style="padding: 12px 24px; cursor: pointer;">Gerar Documento</button>
+    </div>
+
+    <div id="doc" class="documento" style="display:none;"></div>
+    <button id="printBtn" onclick="window.print()" style="display:none; margin:20px auto; padding:12px 30px; font-size:18px; cursor: pointer;">🖨️ Imprimir / Salvar PDF</button>
+</div>
+
+<script>
+let produtos = [];
+let contador = 1;
+
+function addProduto() {
+    let i = produtos.length;
+    let div = document.createElement("div");
+    div.className = "produto";
+    div.innerHTML = `
+        <div class="grid-2">
+            <input placeholder="Descrição" id="desc${i}">
+            <input type="number" step="0.01" placeholder="Valor unitário" id="preco${i}">
+        </div>
+        <input type="number" placeholder="Quantidade" id="qtd${i}" step="0.1" value="1">
+        <input type="number" step="0.01" placeholder="Valor promocional" id="promo${i}">
+        <input type="number" step="0.1" placeholder="% desconto" id="descP${i}">
+    `;
+    document.getElementById("produtos").appendChild(div);
+    produtos.push(i);
+}
+
+function gerar() {
+    let tipo = document.querySelector('input[name="tipo"]:checked').value;
+    let cor = document.querySelector('input[name="cor"]:checked').value;
+    let empresa = document.getElementById("empresa").value.trim();
+    if (!empresa) return alert("Preencha o nome da empresa!");
+
+    let total = 0;
+    let linhas = "";
+
+    produtos.forEach(i => {
+        let desc = document.getElementById(`desc${i}`).value.trim();
+        let preco = parseFloat(document.getElementById(`preco${i}`).value) || 0;
+        let qtd = parseFloat(document.getElementById(`qtd${i}`).value) || 1;
+        let promo = parseFloat(document.getElementById(`promo${i}`).value) || 0;
+        let descP = parseFloat(document.getElementById(`descP${i}`).value) || 0;
+
+        if (!desc || preco <= 0) return;
+
+        let valorUnit = promo > 0 ? promo : (descP > 0 ? preco * (1 - descP/100) : preco);
+        let subtotal = valorUnit * qtd;
+        total += subtotal;
+
+        linhas += `<tr>
+            <td style="word-break: break-all;">${desc}</td>
+            <td style="width:50px;">${qtd}</td>
+            <td style="width:110px;">R$ ${valorUnit.toFixed(2)}</td>
+            <td style="width:120px; text-align:right;">R$ ${subtotal.toFixed(2)}</td>
+        </tr>`;
+    });
+
+    if (linhas === "") return alert("Adicione pelo menos um item!");
+
+    let logoFile = document.getElementById("logoInput").files[0];
+    let logoURL = logoFile ? URL.createObjectURL(logoFile) : "";
+    let enderecoCompleto = [document.getElementById("endereco").value, document.getElementById("numero").value, document.getElementById("cidade").value, document.getElementById("estado").value].filter(v => v.trim()).join(", ");
+
+    let html = `
+        <div class="header">
+            <div>${logoURL ? `<img src="${logoURL}" class="logo">` : '<div></div>'}</div>
+            <div class="company-info">
+                <strong style="font-size:1.4em;">${empresa}</strong><br>
+                ${document.getElementById("email").value ? `Email: ${document.getElementById("email").value}<br>` : ''}
+                ${document.getElementById("telefone").value ? `Tel: ${document.getElementById("telefone").value}<br>` : ''}
+                ${enderecoCompleto}
+            </div>
+        </div>
+
+        <div class="tipo-doc">${tipo.toUpperCase()} Nº ${contador++}</div>
+
+        <div class="client-box">
+            <strong>Cliente:</strong> ${document.getElementById("cliente").value || "—"}<br>
+            ${document.getElementById("telCliente").value ? `Telefone: ${document.getElementById("telCliente").value}<br>` : ''}
+            ${document.getElementById("emailCliente").value ? `Email: ${document.getElementById("emailCliente").value}` : ''}
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}<br>
+            ${document.getElementById("pagamento").value ? `<strong>Pagamento:</strong> ${document.getElementById("pagamento").value}` : ''}
+        </div>
+
+        ${document.getElementById("solicitacao").value ? `<p><strong>Solicitação:</strong><br>${document.getElementById("solicitacao").value.replace(/\n/g,'<br>')}</p>` : ''}
+
+        <table class="tabela">
+            <thead><tr><th style="width:auto;">Descrição</th><th style="width:50px;">Qtd</th><th style="width:110px;">Unit.</th><th style="width:120px; text-align:right;">Subtotal</th></tr></thead>
+            <tbody>${linhas}</tbody>
+        </table>
+
+        <div class="total">Total: R$ ${total.toFixed(2)}</div>
+
+        ${document.getElementById("condicoes").value ? `<div class="condicoes"><strong>Obs:</strong><br>${document.getElementById("condicoes").value.replace(/\n/g,'<br>')}</div>` : ''}
+
+        <div style="text-align:center; margin-top:50px;">Assinatura: _______________________________</div>
+        <div class="footer">Gerado por leodition.com.br</div>
+    `;
+
+    let doc = document.getElementById("doc");
+    doc.innerHTML = html;
+    doc.className = "documento theme-" + cor;
+    doc.style.display = "block";
+    document.getElementById("printBtn").style.display = "block";
+    doc.scrollIntoView({ behavior: 'smooth' });
+}
+
+addProduto();
+</script>
+</body>
+</html>
