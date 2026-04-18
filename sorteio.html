@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SORTEADOR | Leodition</title>
+    <style>
+        :root {
+            --primary: #FFB800; 
+            --primary-dark: #E6A600;
+            --accent: #FF6B00;  
+            --dark-bg: #0A0A0A;
+            --card-bg: #141414;
+            --text: #FFFFFF;
+            --text-muted: #A0A0A0;
+            --border: #2A2A2A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--dark-bg);
+            background-image: radial-gradient(circle at 50% -20%, #222, var(--dark-bg));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Botões Laterais (Fora do Quadro) */
+        .side-buttons {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-side {
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .btn-side:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #222;
+            transform: translateX(-5px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            background: var(--card-bg);
+            padding: 50px 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Estilo da Logo com Medidas de 5cm x 3cm */
+        .logo-site {
+            width: 190px;  /* Aprox. 5cm */
+            height: 115px; /* Aprox. 3cm */
+            object-fit: contain; /* Garante que a logo não distorça */
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        #finish-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 10, 0.98);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        #finish-overlay h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .brand-area {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--primary);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .menu-sorteio {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .btn-mode {
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .btn-mode:hover:not(.disabled) {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .btn-mode.active {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+        }
+
+        .btn-mode.disabled {
+            opacity: 0.7;
+            cursor: help;
+            border-style: dashed;
+        }
+
+        .badge-soon {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--accent);
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            background: #0f0f0f;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 1rem;
+            resize: none;
+            margin-bottom: 20px;
+        }
+
+        #group-settings {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .btn-draw, .btn-finish {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            color: #000;
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        #roulette-wrapper {
+            position: relative;
+            margin: 20px auto 40px;
+            width: 300px;
+            height: 300px;
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        canvas {
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        #pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid var(--primary);
+            z-index: 10;
+        }
+
+        #big-result {
+            display: none;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 20px 0;
+            text-transform: uppercase;
+            animation: win-anim 0.5s ease-out;
+            text-shadow: 0 0 20px rgba(255, 184, 0, 0.4);
+        }
+
+        @keyframes win-anim {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #0f0f0f;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+            padding: 15px;
+            width: 100%;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="side-buttons">
+        <a href="https://www.leodition.com.br" target="_blank" class="btn-side">Site Leodition</a>
+        <a href="https://wa.me/5551998911304" target="_blank" class="btn-side" style="border-color: #25D366; color: #25D366;">Problemas? Avise-nos</a>
+    </div>
+
+    <div class="container">
+        <div id="finish-overlay">
+            <h2>Todos nomes foram sorteados</h2>
+            <button class="btn-finish" onclick="resetPool()">Sortear novamente</button>
+            <button class="btn-outline" onclick="closeOverlay()">Escolher outra modalidade</button>
+        </div>
+
+        <div class="brand-area">
+            <img src="assets/img/logo/leologo.png" alt="Logo Leodition" class="logo-site">
+            <h1>Sorteador</h1>
+        </div>
+
+        <div class="menu-sorteio">
+            <button class="btn-mode active" onclick="changeMode('roleta', this)">Individual</button>
+            <button class="btn-mode" onclick="changeMode('grupos', this)">Grupos</button>
+            <button class="btn-mode disabled">
+                Amigo Secreto
+                <span class="badge-soon">EM BREVE</span>
+            </button>
+        </div>
+
+        <textarea id="namesInput" placeholder="Nomes separados por vírgula..." oninput="clearPool()"></textarea>
+
+        <div id="group-settings">
+            <label style="color: var(--text-muted);">Tamanho dos grupos:</label>
+            <select id="groupSize" style="background:#000; color:#fff; border:1px solid #333; padding:5px; border-radius:5px;">
+                <option value="2">2 pessoas</option>
+                <option value="3">3 pessoas</option>
+                <option value="4">4 pessoas</option>
+            </select>
+        </div>
+
+        <div id="roulette-section">
+            <div id="pointer"></div>
+            <div id="roulette-wrapper">
+                <canvas id="canvas" width="300" height="300"></canvas>
+            </div>
+        </div>
+
+        <div id="big-result">VENCEDOR</div>
+
+        <button class="btn-draw" id="drawBtn" onclick="startDraw()">Sortear nome</button>
+
+        <div id="finalResults" class="result-box">Os resultados aparecerão aqui.</div>
+    </div>
+
+    <script>
+        let mode = 'roleta';
+        let availablePool = [];
+        let currentRotation = 0;
+        const wrapper = document.getElementById('roulette-wrapper');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function changeMode(m, btn) {
+            if (m === 'amigo') return;
+            mode = m;
+            document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('roulette-section').style.display = (m === 'roleta') ? 'block' : 'none';
+            document.getElementById('group-settings').style.display = (m === 'grupos') ? 'block' : 'none';
+            document.getElementById('big-result').style.display = 'none';
+            document.getElementById('drawBtn').innerText = (m === 'grupos') ? 'Sortear grupos' : 'Sortear nome';
+            if (m === 'roleta') drawRoulette();
+        }
+
+        function getNames() {
+            return document.getElementById('namesInput').value.split(',').map(n => n.trim()).filter(n => n !== "");
+        }
+
+        function clearPool() {
+            availablePool = [];
+            if (mode === 'roleta') drawRoulette();
+        }
+
+        function resetPool() {
+            availablePool = [];
+            document.getElementById('finish-overlay').style.display = 'none';
+            document.getElementById('big-result').style.display = 'none';
+            drawRoulette();
+        }
+
+        function closeOverlay() {
+            document.getElementById('finish-overlay').style.display = 'none';
+        }
+
+        function drawRoulette() {
+            const names = availablePool.length > 0 ? availablePool : getNames();
+            if (names.length === 0) {
+                ctx.clearRect(0,0,300,300);
+                return;
+            }
+            const arc = (Math.PI * 2) / names.length;
+            ctx.clearRect(0, 0, 300, 300);
+            
+            names.forEach((name, i) => {
+                const angle = i * arc;
+                ctx.fillStyle = i % 2 === 0 ? "#FFB800" : "#FF6B00";
+                ctx.beginPath();
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 145, angle, angle + arc, false);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.save();
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 14px sans-serif";
+                ctx.translate(150 + Math.cos(angle + arc/2) * 100, 150 + Math.sin(angle + arc/2) * 100);
+                ctx.rotate(angle + arc/2 + Math.PI/2);
+                ctx.fillText(name.substring(0, 12), -ctx.measureText(name.substring(0, 12)).width/2, 0);
+                ctx.restore();
+            });
+        }
+
+        function startDraw() {
+            const names = getNames();
+            if (names.length < 2) return alert("Insira pelo menos 2 nomes.");
+
+            if (mode === 'roleta') {
+                if (availablePool.length === 0) availablePool = [...names];
+                
+                const drawIndex = Math.floor(Math.random() * availablePool.length);
+                const winner = availablePool[drawIndex];
+                
+                const segmentDeg = 360 / availablePool.length;
+                const targetRotation = 360 - (drawIndex * segmentDeg) - (segmentDeg / 2);
+                const extraSpins = (Math.floor(Math.random() * 5) + 5) * 360;
+                
+                currentRotation += extraSpins + (targetRotation - (currentRotation % 360));
+                wrapper.style.transform = `rotate(${currentRotation}deg)`;
+
+                document.getElementById('drawBtn').disabled = true;
+
+                setTimeout(() => {
+                    document.getElementById('big-result').innerText = winner;
+                    document.getElementById('big-result').style.display = 'block';
+                    document.getElementById('drawBtn').disabled = false;
+                    
+                    availablePool.splice(drawIndex, 1);
+                    document.getElementById('finalResults').innerHTML = `Restam ${availablePool.length} nomes no sorteio.`;
+
+                    if (availablePool.length === 0) {
+                        setTimeout(() => document.getElementById('finish-overlay').style.display = 'flex', 1500);
+                    } else {
+                        setTimeout(drawRoulette, 1000);
+                    }
+                }, 4100);
+
+            } else if (mode === 'grupos') {
+                const size = parseInt(document.getElementById('groupSize').value);
+                const shuffled = [...names].sort(() => 0.5 - Math.random());
+                let html = `<p style="color:var(--primary); font-weight:bold; margin-bottom:10px;">GRUPOS FORMADOS</p>`;
+                for (let i = 0; i < shuffled.length; i += size) {
+                    const group = shuffled.slice(i, i + size);
+                    html += `<div style="margin-bottom:8px; color:#fff;"><strong>Grupo ${Math.floor(i/size) + 1}:</strong> ${group.join(', ')}</div>`;
+                }
+                document.getElementById('finalResults').innerHTML = html;
+            }
+        }
+        
+        window.onload = drawRoulette;
+    </script>
+</body>
+</html>
