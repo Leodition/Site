@@ -34,6 +34,23 @@ button {
     background: #22c55e;
     color: black;
     cursor: pointer;
+    font-weight: bold;
+}
+
+/* Botão de Voltar ao Site */
+.btn-site {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    margin-top: 20px;
+    font-size: 13px;
+    transition: all 0.3s ease;
+}
+
+.btn-site:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-color: #64748b;
 }
 
 .hidden { display: none; }
@@ -57,6 +74,9 @@ button {
     <button onclick="login()">Entrar</button>
 
     <p id="erro" class="erro"></p>
+
+    <br>
+    <button class="btn-site" onclick="irAoSite()">← Voltar para Leodition.com.br</button>
 </div>
 
 <div id="menu" class="container hidden">
@@ -64,6 +84,9 @@ button {
     <p id="usuario"></p>
 
     <button onclick="abrirModulo(1)">Módulo 1</button>
+    
+    <br>
+    <button class="btn-site" onclick="irAoSite()">Sair e voltar ao site</button>
 </div>
 
 <div id="modulo" class="container hidden">
@@ -82,6 +105,11 @@ button {
 <script>
 
 let usuario = "";
+
+// Função para voltar ao site principal
+function irAoSite() {
+    window.location.href = "https://www.leodition.com.br";
+}
 
 async function login() {
     let cpf = document.getElementById("cpf").value.trim();
