@@ -191,6 +191,37 @@
     @media (max-width: 860px) {
       .tile { grid-column: span 12; }
     }
+
+    /* Botão Central Inferior */
+    .extra-nav {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    .btn-cursos {
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 14px;
+      color: #000;
+      background: linear-gradient(135deg, #fff 0%, var(--yellow) 50%, var(--orange) 100%);
+      box-shadow: 0 0 25px rgba(255, 216, 74, 0.4);
+      transition: all 0.4s ease;
+      filter: brightness(1.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-cursos:hover {
+      transform: scale(1.05) translateY(-3px);
+      filter: brightness(1.25);
+      box-shadow: 0 0 40px rgba(255, 122, 24, 0.6);
+    }
+
     /* Painel Detalhes */
     .panel {
       grid-column: 1 / -1;
@@ -467,7 +498,6 @@
   </style>
 </head>
 <body>
-  <!-- VÍDEO DE FUNDO ADICIONADO -->
   <video class="bg-video" autoplay muted loop playsinline>
     <source src="assets/video/fundoleodition.mp4" type="video/mp4">
   </video>
@@ -507,7 +537,6 @@
             <h3>CÂMERA E SOM</h3>
             <p>Podcasts, vídeos, roteiros e áudio: do conceito ao conteúdo final.</p>
           </article>
-          <!-- Painel LIVROS -->
           <div class="panel" id="panel-livros">
             <div class="panel-top"><b>LIVROS</b><button class="close-btn" data-close>FECHAR</button></div>
             <div class="books-gallery">
@@ -534,7 +563,6 @@
               </div>
             </div>
           </div>
-          <!-- Painel PROJETOS -->
           <div class="panel" id="panel-projetos">
             <div class="panel-top"><b>PROJETOS</b><button class="close-btn" data-close>FECHAR</button></div>
             <div class="panel-body">
@@ -546,7 +574,6 @@
               </ul>
             </div>
           </div>
-          <!-- Painel CÂMERA E SOM -->
           <div class="panel" id="panel-camera">
             <div class="panel-top"><b>CÂMERA E SOM</b><button class="close-btn" data-close>FECHAR</button></div>
             <div class="panel-body">
@@ -558,9 +585,16 @@
             </div>
           </div>
         </section>
+
+        <nav class="extra-nav">
+          <a href="giroscopio.html" class="btn-cursos">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z"/></svg>
+            Cursos Leodition
+          </a>
+        </nav>
+
       </div>
     </main>
-    <!-- RODAPÉ PADRONIZADO -->
     <footer>
       <div class="footer-inner">
         <div class="contact-strip" aria-label="Contatos Leodition">
@@ -616,7 +650,6 @@
       </div>
     </footer>
   </div>
-  <!-- MODAL DETALHES DO LIVRO -->
   <div class="modal" id="book-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -632,7 +665,6 @@
     </div>
   </div>
 
-  <!-- Scripts originais da página (painéis, modal, easter egg "leo", efeitos de foco) -->
   <script>
     (function(){
       const tiles = Array.from(document.querySelectorAll('.tile'));
@@ -756,10 +788,7 @@
       setTimeout(() => {
         const msg = document.createElement('div');
         msg.className = 'leo-message';
-        msg.innerHTML = `
-          <div class="leo-title">Criar, criar...</div>
-          <div class="leo-text">Sempre buscando inovar.</div>
-        `;
+        msg.innerHTML = `<div class="leo-title">Criar, criar...</div><div class="leo-text">Sempre buscando inovar.</div>`;
         document.body.appendChild(msg);
         setTimeout(() => msg.remove(), 3000);
       }, 650);
@@ -771,10 +800,7 @@
     }
   </script>
 
-  <!-- SCRIPT ÚNICO DE ESTATÍSTICAS E PAINEL SECRETO "DANIEL" -->
   <script>
-    // === SISTEMA ÚNICO DE ESTATÍSTICAS E PAINEL SECRETO ===
-
     const stats = {
       get: () => JSON.parse(localStorage.getItem('leodition_stats') || '{}'),
       save: (data) => localStorage.setItem('leodition_stats', JSON.stringify(data)),
@@ -784,128 +810,34 @@
         stats.save(data);
       }
     };
-
-    // 1. Contar visita total
     stats.increment('visitas_total');
-
-    // 2. Detectar página atual e contar aba correta
     const paginaAtual = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
-
     const mapaAbas = {
       'index.html': 'aba_home',
       'servicos.html': 'aba_servicos',
       'portfolio.html': 'aba_projetos',
       'loja.html': 'aba_loja',
       'fale-com-a-gente.html': 'aba_contato',
-      '': 'aba_home',
     };
+    if (mapaAbas[paginaAtual]) stats.increment(mapaAbas[paginaAtual]);
 
-    if (mapaAbas[paginaAtual]) {
-      stats.increment(mapaAbas[paginaAtual]);
-    }
-
-    // 3. [SÓ NA LOJA] Contar cliques em categorias (se existir .card-link)
-    if (paginaAtual === 'loja.html') {
-      document.querySelectorAll('.card-link').forEach(link => {
-        const titulo = link.querySelector('h3')?.textContent.trim() || 'Categoria desconhecida';
-        link.addEventListener('click', () => {
-          let data = stats.get();
-          data.visualizacoes_categorias = data.visualizacoes_categorias || {};
-          data.visualizacoes_categorias[titulo] = (data.visualizacoes_categorias[titulo] || 0) + 1;
-
-          // Atualiza categoria mais vista
-          let max = 0;
-          let empatados = [];
-          for (let cat in data.visualizacoes_categorias) {
-            const count = data.visualizacoes_categorias[cat];
-            if (count > max) {
-              max = count;
-              empatados = [cat];
-            } else if (count === max && max > 0) {
-              empatados.push(cat);
-            }
-          }
-          data.categoria_mais_vista = max > 0 
-            ? empatados.map(c => `${c} (${max} vez${max > 1 ? 'es' : ''})`).join(' | ')
-            : 'Nenhum ainda';
-          
-          stats.save(data);
-        });
-      });
-    }
-
-    // 4. Painel secreto "daniel"
     let buffer = '';
     const PALAVRA_SECRETA = 'daniel';
     let panelAberto = false;
-
     document.addEventListener('keydown', (e) => {
       if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
         buffer += e.key.toLowerCase();
-        if (buffer.length > PALAVRA_SECRETA.length) {
-          buffer = buffer.slice(-PALAVRA_SECRETA.length);
-        }
-        if (buffer === PALAVRA_SECRETA) {
-          buffer = '';
-          toggleAdminPanel();
-        }
-      } else if (e.key === 'Backspace') {
-        buffer = buffer.slice(0, -1);
-      } else if (!['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) {
-        buffer = '';
+        if (buffer.length > PALAVRA_SECRETA.length) buffer = buffer.slice(-PALAVRA_SECRETA.length);
+        if (buffer === PALAVRA_SECRETA) { buffer = ''; toggleAdminPanel(); }
       }
     });
 
     function toggleAdminPanel() {
-      if (panelAberto) {
-        document.getElementById('adminPanel')?.remove();
-        panelAberto = false;
-        return;
-      }
-
+      if (panelAberto) { document.getElementById('adminPanel')?.remove(); panelAberto = false; return; }
       const data = stats.get();
-      const nomesAbas = {
-        aba_home: 'Página Inicial',
-        aba_servicos: 'Serviços',
-        aba_projetos: 'Projetos',
-        aba_loja: 'Loja',
-        aba_contato: 'Fale com a Gente'
-      };
-
-      const abasContadas = {
-        aba_home: data.aba_home || 0,
-        aba_servicos: data.aba_servicos || 0,
-        aba_projetos: data.aba_projetos || 0,
-        aba_loja: data.aba_loja || 0,
-        aba_contato: data.aba_contato || 0
-      };
-
       const panel = document.createElement('div');
       panel.id = 'adminPanel';
-      panel.innerHTML = `
-        <div style="position:fixed;top:20px;right:20px;width:420px;background:rgba(18,18,18,.96);border:1px solid rgba(255,122,24,.5);border-radius:20px;padding:22px;color:#f4f4f4;font-family:system-ui;z-index:99999;box-shadow:0 20px 60px rgba(0,0,0,.9);backdrop-filter:blur(14px);">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h3 style="margin:0;font-size:20px;color:#ffd84a;">Painel Administrativo</h3>
-            <button onclick="this.closest('#adminPanel').remove();panelAberto=false" style="background:none;border:none;color:#ff7a18;font-size:28px;cursor:pointer;">×</button>
-          </div>
-          <div style="font-size:14px;line-height:1.7;">
-            <p><strong>Visitas totais ao site:</strong> ${data.visitas_total || 0}</p>
-            <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin:16px 0;">
-            <p><strong>Acessos por aba:</strong></p>
-            <ul style="margin:8px 0 16px;padding-left:24px;">
-              ${Object.keys(abasContadas).map(key => `<li>${nomesAbas[key]}: <strong>${abasContadas[key]}</strong></li>`).join('')}
-            </ul>
-            <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin:16px 0;">
-            <p><strong>Categoria mais vista na loja:</strong><br>
-              <span style="color:#ffd84a;font-size:15px;">${data.categoria_mais_vista || 'Nenhum clique registrado ainda'}</span>
-            </p>
-            <small style="color:#aaa;display:block;margin-top:24px;font-size:12px;line-height:1.4;">
-              Digite "daniel" novamente para fechar.<br>
-              Dados salvos apenas no seu navegador (localStorage).
-            </small>
-          </div>
-        </div>
-      `;
+      panel.innerHTML = `<div style="position:fixed;top:20px;right:20px;width:300px;background:rgba(18,18,18,.96);border:1px solid var(--orange);border-radius:20px;padding:20px;color:#fff;z-index:99999;backdrop-filter:blur(14px);"><h3>Admin Stats</h3><p>Total: ${data.visitas_total || 0}</p></div>`;
       document.body.appendChild(panel);
       panelAberto = true;
     }
