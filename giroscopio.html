@@ -30,6 +30,31 @@ input, button {
     border: none;
 }
 
+/* Container para alinhar o olho com o input */
+.password-wrapper {
+    position: relative;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.password-wrapper input {
+    width: 100%;
+    margin: 10px 0;
+    padding-right: 40px; /* Espaço para o olho */
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #94a3b8;
+    user-select: none;
+    font-size: 18px;
+}
+
 button {
     background: #22c55e;
     color: black;
@@ -37,7 +62,6 @@ button {
     font-weight: bold;
 }
 
-/* Botão de Voltar ao Site */
 .btn-site {
     background: transparent;
     color: #94a3b8;
@@ -68,8 +92,12 @@ button {
     <h1>Projeto Giroscópio</h1>
     <p>Encontre sua direção</p>
 
-    <input type="text" id="cpf" placeholder="Digite seu CPF"><br>
-    <input type="password" id="senha" placeholder="Senha"><br>
+    <input type="text" id="cpf" placeholder="Digite seu CPF" style="max-width: 280px;"><br>
+    
+    <div class="password-wrapper">
+        <input type="password" id="senha" placeholder="Senha">
+        <span class="toggle-password" onclick="toggleView()">👁️</span>
+    </div>
 
     <button onclick="login()">Entrar</button>
 
@@ -106,7 +134,20 @@ button {
 
 let usuario = "";
 
-// Função para voltar ao site principal
+// Função para alternar visualização da senha
+function toggleView() {
+    const inputSenha = document.getElementById("senha");
+    const olho = document.querySelector(".toggle-password");
+    
+    if (inputSenha.type === "password") {
+        inputSenha.type = "text";
+        olho.innerText = "🙈"; // Muda o ícone quando está visível
+    } else {
+        inputSenha.type = "password";
+        olho.innerText = "👁️";
+    }
+}
+
 function irAoSite() {
     window.location.href = "https://www.leodition.com.br";
 }
@@ -136,7 +177,6 @@ async function login() {
 
         document.getElementById("login").classList.add("hidden");
         document.getElementById("menu").classList.remove("hidden");
-
         document.getElementById("usuario").innerText = "Usuário: " + usuario;
 
     } catch (e) {
