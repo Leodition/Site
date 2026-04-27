@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Projeto Giroscópio</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    margin: 0;
+    text-align: center;
+}
+
+.container { padding: 40px; }
+
+.card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 500px;
+    margin: auto;
+}
+
+input, button {
+    padding: 12px;
+    margin: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+button {
+    background: #22c55e;
+    color: black;
+    cursor: pointer;
+}
+
+.hidden { display: none; }
+
+.erro {
+    color: #f87171;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="login" class="container">
+    <h1>Projeto Giroscópio</h1>
+    <p>Encontre sua direção</p>
+
+    <input type="text" id="cpf" placeholder="Digite seu CPF"><br>
+    <input type="password" id="senha" placeholder="Senha"><br>
+
+    <button onclick="login()">Entrar</button>
+
+    <p id="erro" class="erro"></p>
+</div>
+
+<div id="menu" class="container hidden">
+    <h2>Bem-vindo</h2>
+    <p id="usuario"></p>
+
+    <button onclick="abrirModulo(1)">Módulo 1</button>
+</div>
+
+<div id="modulo" class="container hidden">
+    <div class="card">
+        <h2>Módulo 1</h2>
+        <p>Você já parou pra pensar quem você é além das expectativas dos outros?</p>
+        <button onclick="finalizar()">Finalizar módulo</button>
+    </div>
+</div>
+
+<div id="final" class="container hidden">
+    <h2>✔ Módulo concluído</h2>
+    <button onclick="voltar()">Voltar ao menu</button>
+</div>
+
+<script>
+
+let usuario = "";
+
+async function login() {
+    let cpf = document.getElementById("cpf").value.trim();
+    let senha = document.getElementById("senha").value;
+    let erro = document.getElementById("erro");
+
+    erro.innerText = "";
+
+    if (senha !== "Leodition") {
+        erro.innerText = "Senha incorreta.";
+        return;
+    }
+
+    try {
+        let resposta = await fetch("alunos.json");
+        let dados = await resposta.json();
+
+        if (!dados.usuarios.includes(cpf)) {
+            erro.innerText = "Seu acesso ainda não foi liberado. Procure o responsável.";
+            return;
+        }
+
+        usuario = cpf;
+
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("menu").classList.remove("hidden");
+
+        document.getElementById("usuario").innerText = "Usuário: " + usuario;
+
+    } catch (e) {
+        erro.innerText = "Erro ao carregar lista de alunos.";
+    }
+}
+
+function abrirModulo() {
+    document.getElementById("menu").classList.add("hidden");
+    document.getElementById("modulo").classList.remove("hidden");
+}
+
+function finalizar() {
+    document.getElementById("modulo").classList.add("hidden");
+    document.getElementById("final").classList.remove("hidden");
+}
+
+function voltar() {
+    document.getElementById("final").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
+}
+
+</script>
+
+</body>
+</html>
