@@ -26,7 +26,7 @@
             display: flex; align-items: center; justify-content: center; padding: 20px;
         }
 
-        /* Botões Laterais (Mantidos fixos) */
+        /* Botões Laterais Fixos */
         .side-buttons { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
         .btn-side {
             background: #1a1a1a; border: 1px solid var(--border); color: var(--text-muted);
@@ -44,7 +44,6 @@
 
         @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
 
-        /* Coluna Esquerda */
         .logo-site { width: 160px; margin-bottom: 20px; display: block; }
         h1 { font-size: 1.5rem; letter-spacing: 2px; color: var(--primary); text-transform: uppercase; margin-bottom: 25px; }
 
@@ -59,7 +58,8 @@
             width: 100%; height: 120px; background: #080808; border: 1px solid var(--border);
             color: #fff; border-radius: 12px; padding: 15px; font-size: 0.9rem; resize: none; margin-bottom: 10px;
         }
-        .input-tip { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; }
+        .input-tip { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
+        .input-tip strong { color: var(--primary); }
 
         .input-controls { display: flex; gap: 8px; margin-bottom: 20px; }
         .btn-tool {
@@ -73,14 +73,12 @@
             border-radius: 12px; cursor: pointer; width: 100%; text-transform: uppercase;
         }
 
-        /* Coluna Direita (Display) */
         .display-area {
             background: #000; border: 4px solid var(--border); border-radius: 16px;
             height: 400px; position: relative; overflow: hidden;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Carretel */
         .reel-track {
             display: flex; position: absolute; left: 50%;
             transition: transform 1.5s cubic-bezier(0.1, 0, 0.1, 1);
@@ -100,13 +98,15 @@
         .p-top { border-top: 30px solid var(--primary); top: 0; }
         .p-bottom { border-bottom: 30px solid var(--primary); bottom: 0; }
 
-        /* Quadro de Grupos Interno */
         #group-result {
             width: 100%; height: 100%; padding: 20px; display: none;
             overflow-y: auto; flex-direction: column; gap: 10px;
         }
-        .group-card { background: #0f0f0f; border-left: 4px solid var(--primary); padding: 12px; border-radius: 4px; }
+        .group-card { background: #0f0f0f; border-left: 4px solid var(--primary); padding: 12px; border-radius: 4px; margin-bottom: 5px;}
         .group-card strong { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 75, 75, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); } }
+        .recording { animation: pulse-red 1.5s infinite; border-color: #ff4b4b !important; color: #ff4b4b !important; }
     </style>
 </head>
 <body>
@@ -117,7 +117,6 @@
     </div>
 
     <div class="container">
-        <!-- Coluna de Configuração -->
         <div class="config-col">
             <img src="assets/img/logo/leologo.png" alt="Logo Leodition" class="logo-site">
             <h1>Sorteador</h1>
@@ -127,8 +126,8 @@
                 <button class="btn-mode" id="btn-grp" onclick="setMode('grupo')">Grupos</button>
             </div>
 
-            <textarea id="namesInput" placeholder="Nomes separados por vírgula..." oninput="updatePreview()"></textarea>
-            <p class="input-tip">Dica voz: Diga o nome e use "BARRA" para separar (ex: Leo barra Maria).</p>
+            <textarea id="namesInput" placeholder="Nomes separados por vírgula..."></textarea>
+            <p class="input-tip">Para usar por voz: diga <strong>"VÍRGULA"</strong> após cada nome. Ao parar de falar, o sistema salva automaticamente.</p>
 
             <div class="input-controls">
                 <button class="btn-tool" onclick="document.getElementById('fileIn').click()">📂 Foto ou Lista</button>
@@ -145,10 +144,9 @@
             </div>
 
             <button class="btn-draw" id="mainBtn" onclick="execute()">Sortear Agora!</button>
-            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary);"></div>
+            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary); font-weight: bold;"></div>
         </div>
 
-        <!-- Coluna de Visualização -->
         <div class="display-col">
             <div class="display-area">
                 <div id="ind-view" style="width:100%; height:100%; position:relative; display:flex; align-items:center;">
@@ -169,6 +167,7 @@
         const track = document.getElementById('track');
         const namesInput = document.getElementById('namesInput');
         const grpResult = document.getElementById('group-result');
+        const log = document.getElementById('status-log');
 
         function setMode(m) {
             mode = m;
@@ -182,7 +181,6 @@
 
         async function handleFile(input) {
             const file = input.files[0]; if(!file) return;
-            const log = document.getElementById('status-log');
             if(file.type.startsWith('image/')) {
                 log.innerText = "⏳ Lendo caderno...";
                 const res = await Tesseract.recognize(file, 'por');
@@ -197,19 +195,49 @@
         }
 
         let recognition;
-        if('webkitSpeechRecognition' in window) {
-            recognition = new webkitSpeechRecognition();
+        let isRecording = false;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
             recognition.lang = 'pt-BR';
-            recognition.onresult = e => {
-                let text = e.results[0][0].transcript.replace(/\s*barra\s*/gi, ', ');
-                namesInput.value += (namesInput.value ? ', ' : '') + text;
-                toggleVoice(); updatePreview();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+
+            recognition.onresult = (event) => {
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        let text = event.results[i][0].transcript;
+                        if (namesInput.value.trim() !== "") {
+                            let separator = namesInput.value.trim().endsWith(',') ? ' ' : ', ';
+                            namesInput.value = namesInput.value.trim() + separator + text;
+                        } else {
+                            namesInput.value = text;
+                        }
+                        updatePreview();
+                    }
+                }
             };
+            recognition.onerror = () => stopVoice();
         }
+
         function toggleVoice() {
-            const btn = document.getElementById('voiceBtn');
-            if(btn.classList.contains('recording')) { recognition.stop(); btn.classList.remove('recording'); btn.style.background=""; }
-            else { recognition.start(); btn.classList.add('recording'); btn.style.background="#ff4b4b"; }
+            if (!recognition) return alert("Navegador sem suporte. Use Chrome.");
+            isRecording ? stopVoice() : startVoice();
+        }
+
+        function startVoice() {
+            isRecording = true;
+            recognition.start();
+            document.getElementById('voiceBtn').classList.add('recording');
+            log.innerText = "🎙️ Ouvindo... diga os nomes e vírgulas.";
+        }
+
+        function stopVoice() {
+            isRecording = false;
+            recognition.stop();
+            document.getElementById('voiceBtn').classList.remove('recording');
+            log.innerText = "🎙️ Microfone desligado.";
         }
 
         function getNames() { return namesInput.value.split(',').map(n => n.trim()).filter(n => n !== ""); }
@@ -227,31 +255,28 @@
             if(mode === 'individual') {
                 if(!pool.length) pool = [...names];
                 const winnerName = pool[Math.floor(Math.random() * pool.length)];
-                
                 let longList = [];
                 for(let i=0; i<10; i++) longList = [...longList, ...names];
                 const finalPos = (longList.length - names.length) + names.indexOf(winnerName);
-                
                 track.innerHTML = longList.map(n => `<div class="slot">${n}</div>`).join('');
                 track.style.transition = "none";
                 track.style.transform = "translateX(0)";
-                
                 setTimeout(() => {
                     track.style.transition = "transform 1.5s cubic-bezier(0.1, 0, 0.1, 1)";
                     track.style.transform = `translateX(${-(finalPos * 250) - 125}px)`;
                 }, 50);
-
                 document.getElementById('mainBtn').disabled = true;
                 setTimeout(() => {
-                    document.querySelectorAll('.slot')[finalPos].classList.add('win');
+                    const slots = document.querySelectorAll('.slot');
+                    if(slots[finalPos]) slots[finalPos].classList.add('win');
                     pool = pool.filter(n => n !== winnerName);
-                    document.getElementById('status-log').innerText = `Sorteado: ${winnerName} | Restam: ${pool.length}`;
+                    log.innerText = `🏆 Sorteado: ${winnerName} | Restam: ${pool.length}`;
                     document.getElementById('mainBtn').disabled = false;
                 }, 1600);
             } else {
                 const size = parseInt(document.getElementById('grpSize').value);
                 const shuffled = [...names].sort(() => 0.5 - Math.random());
-                grpResult.innerHTML = '<h2 style="color:var(--primary); font-size:1rem; margin-bottom:10px;">GRUPOS FORMADOS</h2>';
+                grpResult.innerHTML = '<h2 style="color:var(--primary); font-size:1.1rem; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">GRUPOS FORMADOS</h2>';
                 for (let i = 0; i < shuffled.length; i += size) {
                     const g = shuffled.slice(i, i + size);
                     grpResult.innerHTML += `<div class="group-card"><strong>Grupo ${Math.floor(i/size)+1}</strong>${g.join(' & ')}</div>`;
