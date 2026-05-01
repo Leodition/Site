@@ -5,18 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sorteador</title>
     
-    <!-- Configurações para o App (PWA) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sorteador">
     <meta name="mobile-web-app-capable" content="yes">
     
-    <!-- Tags de Ícone Reforçadas -->
     <link rel="apple-touch-icon" href="icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
+    <link rel="icon" type="image/png" href="icon.png">
 
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
@@ -41,6 +36,7 @@
             padding-bottom: 80px;
         }
 
+        /* Banner de Rodapé Otimizado */
         #pwa-footer-banner {
             display: none;
             position: fixed;
@@ -161,9 +157,9 @@
 <body>
 
     <div id="pwa-footer-banner">
-        <div class="pwa-text">Instale o atalho do <strong>Sorteador</strong> (não pesa no celular!)</div>
+        <div class="pwa-text">Instale o <strong>Sorteador</strong> ( Atalho leve )</div>
         <div class="pwa-btns">
-            <button class="btn-install-info" onclick="alert('No iPhone: Compartilhar > Adicionar à Tela de Início. No Android: Menu (3 pontos) > Instalar Aplicativo.')">Instalar</button>
+            <button id="install-btn" class="btn-install-info" onclick="handleInstallClick()">Instalar</button>
             <button class="btn-close-pwa" onclick="dismissPWA()">✕</button>
         </div>
     </div>
@@ -232,6 +228,7 @@
     <script>
         let mode = 'individual';
         let pool = [];
+        let deferredPrompt; // Para capturar o evento de instalação do Chrome
         const track = document.getElementById('track');
         const namesInput = document.getElementById('namesInput');
         const grpResult = document.getElementById('group-result');
@@ -239,11 +236,32 @@
         const overlay = document.getElementById('action-overlay');
         const progressFill = document.getElementById('progress-fill');
 
-        function checkPWA() {
+        // --- LÓGICA DE INSTALAÇÃO (PWA) ---
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showPwaBanner();
+        });
+
+        function showPwaBanner() {
             const isApp = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-            if (isApp) return;
-            if (localStorage.getItem('pwa_dismissed') === 'true') return;
-            document.getElementById('pwa-footer-banner').style.display = 'flex';
+            if (!isApp && localStorage.getItem('pwa_dismissed') !== 'true') {
+                document.getElementById('pwa-footer-banner').style.display = 'flex';
+            }
+        }
+
+        function handleInstallClick() {
+            if (deferredPrompt) {
+                // Android/Chrome
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') dismissPWA();
+                    deferredPrompt = null;
+                });
+            } else {
+                // iPhone/iOS
+                alert('No iPhone, o atalho é criado manualmente:\n1. Toque no ícone de Compartilhar (quadrado com seta).\n2. Selecione "Adicionar à Tela de Início".');
+            }
         }
 
         function dismissPWA() {
@@ -251,6 +269,12 @@
             localStorage.setItem('pwa_dismissed', 'true');
         }
 
+        // Se for iOS, mostra o banner de qualquer forma (já que o evento beforeinstallprompt não existe lá)
+        if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.navigator.standalone) {
+            showPwaBanner();
+        }
+
+        // --- RESTANTE DAS FUNÇÕES ORIGINAIS ---
         function showOverlay(title, msg, showProgress = false) {
             document.getElementById('overlay-title').innerText = title;
             document.getElementById('overlay-msg').innerText = msg;
@@ -369,11 +393,7 @@
                 }
             }
         }
-        
-        window.onload = () => {
-            updatePreview();
-            checkPWA();
-        };
+        window.onload = updatePreview;
     </script>
 </body>
 </html>
