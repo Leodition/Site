@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SORTEADOR | Leodition SHOW</title>
     
-    <!-- Tags para atalho no celular (não mudam o layout) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -31,14 +30,29 @@
             display: flex; align-items: center; justify-content: center; padding: 20px;
         }
 
-        /* Botões Laterais Fixos */
+        /* Overlay de Processamento e Instrução */
+        #action-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #action-overlay h2 { color: var(--primary); font-size: 2rem; margin-bottom: 10px; text-transform: uppercase; }
+        #action-overlay p { color: #fff; font-size: 1.2rem; }
+        #progress-bar { width: 300px; height: 10px; background: #222; border-radius: 5px; margin-top: 20px; overflow: hidden; }
+        #progress-fill { width: 0%; height: 100%; background: var(--primary); transition: width 0.2s; }
+
         .side-buttons { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
         .btn-side {
             background: #1a1a1a; border: 1px solid var(--border); color: var(--text-muted);
             padding: 12px 18px; border-radius: 8px; text-decoration: none; font-size: 0.8rem;
             font-weight: 600; transition: 0.3s; text-transform: uppercase; text-align: center;
         }
-        .btn-side:hover { border-color: var(--primary); color: var(--primary); transform: translateX(-5px); }
 
         .container {
             width: 100%; max-width: 950px; background: var(--card-bg);
@@ -63,7 +77,6 @@
             width: 100%; height: 120px; background: #080808; border: 1px solid var(--border);
             color: #fff; border-radius: 12px; padding: 15px; font-size: 0.9rem; resize: none; margin-bottom: 10px;
         }
-        .input-tip { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
 
         .input-controls { display: flex; gap: 8px; margin-bottom: 20px; }
         .btn-tool {
@@ -77,14 +90,10 @@
             border-radius: 12px; cursor: pointer; width: 100%; text-transform: uppercase;
         }
 
-        /* Botão Reiniciar */
-        .btn-reset {
-            background: transparent; border: 1px solid #333; color: #ff4b4b; 
-            padding: 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer;
-            width: 100%; margin-top: 10px; text-transform: uppercase; font-weight: bold;
-            transition: 0.3s;
-        }
-        .btn-reset:hover { background: rgba(255, 75, 75, 0.1); border-color: #ff4b4b; }
+        /* Botões de Reiniciar e Apagar */
+        .reset-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-reset { flex: 1; background: transparent; border: 1px solid #333; color: var(--primary); padding: 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+        .btn-clear { flex: 1; background: transparent; border: 1px solid #333; color: #ff4b4b; padding: 10px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
         .display-area {
             background: #000; border: 4px solid var(--border); border-radius: 16px;
@@ -117,12 +126,19 @@
         }
         .group-card { background: #0f0f0f; border-left: 4px solid var(--primary); padding: 12px; border-radius: 4px; margin-bottom: 5px;}
         .group-card strong { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
-
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 75, 75, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); } }
+        
+        #status-log { margin-top: 10px; font-size: 0.8rem; color: var(--primary); font-weight: bold; text-align: center; }
         .recording { animation: pulse-red 1.5s infinite; border-color: #ff4b4b !important; color: #ff4b4b !important; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 75, 75, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0); } }
     </style>
 </head>
 <body>
+
+    <div id="action-overlay">
+        <h2 id="overlay-title">PROCESSANDO</h2>
+        <p id="overlay-msg"></p>
+        <div id="progress-bar"><div id="progress-fill"></div></div>
+    </div>
 
     <div class="side-buttons">
         <a href="https://www.leodition.com.br" target="_blank" class="btn-side">Site Leodition</a>
@@ -130,7 +146,6 @@
     </div>
 
     <div class="container">
-        <!-- Coluna de Configuração -->
         <div class="config-col">
             <img src="assets/img/logo/leologo.png" alt="Logo Leodition" class="logo-site">
             <h1>Sorteador</h1>
@@ -141,7 +156,6 @@
             </div>
 
             <textarea id="namesInput" placeholder="Nomes separados por vírgula..." oninput="updatePreview()"></textarea>
-            <p class="input-tip">Voz: diga <strong>"VÍRGULA"</strong> após cada nome. Foto: use listas com letras legíveis.</p>
 
             <div class="input-controls">
                 <button class="btn-tool" onclick="document.getElementById('fileIn').click()">📂 Foto ou Lista</button>
@@ -158,12 +172,15 @@
             </div>
 
             <button class="btn-draw" id="mainBtn" onclick="execute()">Sortear Agora!</button>
-            <button class="btn-reset" onclick="resetIndividualPool()">🔄 Reiniciar Sorteio</button>
             
-            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary); font-weight: bold;"></div>
+            <div class="reset-group">
+                <button class="btn-reset" onclick="refreshPool()">🔄 Reiniciar Sorteio</button>
+                <button class="btn-clear" onclick="clearAll()">🗑️ Apagar Lista</button>
+            </div>
+            
+            <div id="status-log"></div>
         </div>
 
-        <!-- Coluna de Visualização -->
         <div class="display-col">
             <div class="display-area">
                 <div id="ind-view" style="width:100%; height:100%; position:relative; display:flex; align-items:center;">
@@ -185,6 +202,17 @@
         const namesInput = document.getElementById('namesInput');
         const grpResult = document.getElementById('group-result');
         const log = document.getElementById('status-log');
+        const overlay = document.getElementById('action-overlay');
+        const progressFill = document.getElementById('progress-fill');
+
+        function showOverlay(title, msg, showProgress = false) {
+            document.getElementById('overlay-title').innerText = title;
+            document.getElementById('overlay-msg').innerText = msg;
+            document.getElementById('progress-bar').style.display = showProgress ? 'block' : 'none';
+            overlay.style.display = 'flex';
+        }
+
+        function hideOverlay() { overlay.style.display = 'none'; progressFill.style.width = '0%'; }
 
         function setMode(m) {
             mode = m;
@@ -198,54 +226,56 @@
 
         async function handleFile(input) {
             const file = input.files[0]; if(!file) return;
+            showOverlay("PROCESSANDO", "Lendo arquivo...", true);
             if(file.type.startsWith('image/')) {
-                log.innerText = "⏳ Lendo caderno...";
-                const res = await Tesseract.recognize(file, 'por');
-                namesInput.value = res.data.text.split('\n').map(l => l.replace(/[^a-zA-ZÀ-ÿ\s]/g, '').trim()).filter(l => l.length > 2).join(', ');
-                log.innerText = "✅ Foto lida!";
+                const res = await Tesseract.recognize(file, 'por', {
+                    logger: m => { if(m.status === 'recognizing text') progressFill.style.width = (m.progress * 100) + '%'; }
+                });
+                namesInput.value = res.data.text.split('\n').map(l => l.replace(/^[0-9.\-\s]+/, '').trim()).filter(l => l.length > 2).join(', ');
             } else {
                 const r = new FileReader();
-                r.onload = e => { namesInput.value = e.target.result.replace(/[\r\n]+/g, ', '); log.innerText = "✅ Lista importada!"; };
+                r.onload = e => { namesInput.value = e.target.result.replace(/[\r\n]+/g, ', '); updatePreview(); };
                 r.readAsText(file);
             }
+            hideOverlay();
             updatePreview();
         }
 
-        function resetIndividualPool() {
+        function clearAll() { namesInput.value = ""; pool = []; log.innerText = "Lista apagada."; updatePreview(); }
+
+        function refreshPool() {
             pool = [...getNames()];
-            log.innerText = "🔄 Sorteio reiniciado!";
             updatePreview();
+            log.innerText = "LISTA ATUALIZADA PODE SORTEAR";
         }
 
         let recognition;
-        let isRecording = false;
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
             recognition.lang = 'pt-BR';
             recognition.continuous = true;
             recognition.onresult = (event) => {
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     if (event.results[i].isFinal) {
                         let text = event.results[i][0].transcript;
-                        let separator = namesInput.value.trim() !== "" ? (namesInput.value.trim().endsWith(',') ? ' ' : ', ') : '';
+                        let separator = namesInput.value.trim() !== "" ? ", " : "";
                         namesInput.value = namesInput.value.trim() + separator + text;
                         updatePreview();
                     }
                 }
             };
+            recognition.onend = () => { hideOverlay(); document.getElementById('voiceBtn').classList.remove('recording'); };
         }
 
         function toggleVoice() {
             if (!recognition) return alert("Use Chrome.");
-            if (isRecording) {
+            const btn = document.getElementById('voiceBtn');
+            if (btn.classList.contains('recording')) {
                 recognition.stop();
-                isRecording = false;
-                document.getElementById('voiceBtn').classList.remove('recording');
             } else {
-                recognition.start();
-                isRecording = true;
-                document.getElementById('voiceBtn').classList.add('recording');
+                btn.classList.add('recording');
+                showOverlay("VOZ ATIVADA", "FALE A PALAVRA VÍRGULA APÓS CADA NOME", false);
+                setTimeout(() => { hideOverlay(); recognition.start(); }, 3000);
             }
         }
 
