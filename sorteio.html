@@ -3,439 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SORTEADOR | Leodition</title>
+    <title>SORTEADOR | Leodition SHOW</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
         :root {
             --primary: #FFB800; 
-            --primary-dark: #E6A600;
             --accent: #FF6B00;  
             --dark-bg: #0A0A0A;
             --card-bg: #141414;
             --text: #FFFFFF;
             --text-muted: #A0A0A0;
             --border: #2A2A2A;
+            --slot-width: 250px;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--dark-bg);
             background-image: radial-gradient(circle at 50% -20%, #222, var(--dark-bg));
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
         }
 
-        /* Botões Laterais (Fora do Quadro) */
-        .side-buttons {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 1000;
-        }
-
+        /* Botões Laterais (Mantidos fixos) */
+        .side-buttons { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
         .btn-side {
-            background: #1a1a1a;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 12px 18px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
+            background: #1a1a1a; border: 1px solid var(--border); color: var(--text-muted);
+            padding: 12px 18px; border-radius: 8px; text-decoration: none; font-size: 0.8rem;
+            font-weight: 600; transition: 0.3s; text-transform: uppercase; text-align: center;
         }
-
-        .btn-side:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: #222;
-            transform: translateX(-5px);
-        }
+        .btn-side:hover { border-color: var(--primary); color: var(--primary); transform: translateX(-5px); }
 
         .container {
-            width: 100%;
-            max-width: 750px;
-            background: var(--card-bg);
-            padding: 50px 40px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            width: 100%; max-width: 950px; background: var(--card-bg);
+            padding: 40px; border-radius: 24px; border: 1px solid var(--border);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
         }
 
-        /* Estilo da Logo com Medidas de 5cm x 3cm */
-        .logo-site {
-            width: 190px;  /* Aprox. 5cm */
-            height: 115px; /* Aprox. 3cm */
-            object-fit: contain; /* Garante que a logo não distorça */
-            margin: 0 auto 15px;
-            display: block;
-        }
+        @media (max-width: 850px) { .container { grid-template-columns: 1fr; } }
 
-        #finish-overlay {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 10, 10, 0.98);
-            z-index: 100;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-        }
+        /* Coluna Esquerda */
+        .logo-site { width: 160px; margin-bottom: 20px; display: block; }
+        h1 { font-size: 1.5rem; letter-spacing: 2px; color: var(--primary); text-transform: uppercase; margin-bottom: 25px; }
 
-        #finish-overlay h2 {
-            color: var(--primary);
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
-
-        .brand-area {
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            color: var(--primary);
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        .menu-sorteio {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
+        .menu-sorteio { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-mode {
-            background: #1a1a1a;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            position: relative;
+            flex: 1; background: #1a1a1a; border: 1px solid var(--border);
+            color: var(--text-muted); padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600;
         }
-
-        .btn-mode:hover:not(.disabled) {
-            border-color: var(--primary);
-            color: var(--text);
-        }
-
-        .btn-mode.active {
-            background: var(--primary);
-            color: #000;
-            border-color: var(--primary);
-        }
-
-        .btn-mode.disabled {
-            opacity: 0.7;
-            cursor: help;
-            border-style: dashed;
-        }
-
-        .badge-soon {
-            display: block;
-            font-size: 0.6rem;
-            color: var(--accent);
-            margin-top: 4px;
-            letter-spacing: 1px;
-        }
+        .btn-mode.active { background: var(--primary); color: #000; border-color: var(--primary); }
 
         textarea {
-            width: 100%;
-            height: 100px;
-            background: #0f0f0f;
-            border: 1px solid var(--border);
-            color: white;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 1rem;
-            resize: none;
-            margin-bottom: 20px;
+            width: 100%; height: 120px; background: #080808; border: 1px solid var(--border);
+            color: #fff; border-radius: 12px; padding: 15px; font-size: 0.9rem; resize: none; margin-bottom: 10px;
+        }
+        .input-tip { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; }
+
+        .input-controls { display: flex; gap: 8px; margin-bottom: 20px; }
+        .btn-tool {
+            flex: 1; background: #1a1a1a; border: 1px solid var(--border);
+            color: var(--text-muted); padding: 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer;
         }
 
-        #group-settings {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            display: none;
-        }
-
-        .btn-draw, .btn-finish {
+        .btn-draw {
             background: linear-gradient(135deg, var(--primary), var(--accent));
-            border: none;
-            color: #000;
-            padding: 20px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            border-radius: 12px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            border: none; color: #000; padding: 20px; font-size: 1.2rem; font-weight: 900;
+            border-radius: 12px; cursor: pointer; width: 100%; text-transform: uppercase;
         }
 
-        #roulette-wrapper {
-            position: relative;
-            margin: 20px auto 40px;
-            width: 300px;
-            height: 300px;
-            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+        /* Coluna Direita (Display) */
+        .display-area {
+            background: #000; border: 4px solid var(--border); border-radius: 16px;
+            height: 400px; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        canvas {
-            border-radius: 50%;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        /* Carretel */
+        .reel-track {
+            display: flex; position: absolute; left: 50%;
+            transition: transform 1.5s cubic-bezier(0.1, 0, 0.1, 1);
         }
+        .slot {
+            min-width: var(--slot-width); height: 100px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; font-weight: 900; color: var(--text-muted);
+            border-right: 1px solid #111; padding: 0 10px; text-transform: uppercase;
+        }
+        .slot.win { color: var(--primary); text-shadow: 0 0 20px var(--primary); font-size: 2.2rem; }
 
-        #pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid var(--primary);
-            z-index: 10;
+        .pointer {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; z-index: 10; border-left: 20px solid transparent; border-right: 20px solid transparent;
         }
+        .p-top { border-top: 30px solid var(--primary); top: 0; }
+        .p-bottom { border-bottom: 30px solid var(--primary); bottom: 0; }
 
-        #big-result {
-            display: none;
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin: 20px 0;
-            text-transform: uppercase;
-            animation: win-anim 0.5s ease-out;
-            text-shadow: 0 0 20px rgba(255, 184, 0, 0.4);
+        /* Quadro de Grupos Interno */
+        #group-result {
+            width: 100%; height: 100%; padding: 20px; display: none;
+            overflow-y: auto; flex-direction: column; gap: 10px;
         }
-
-        @keyframes win-anim {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .result-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #0f0f0f;
-            border-radius: 12px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            border: 1px solid var(--border);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--border);
-            color: var(--text);
-            padding: 15px;
-            width: 100%;
-            border-radius: 12px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
+        .group-card { background: #0f0f0f; border-left: 4px solid var(--primary); padding: 12px; border-radius: 4px; }
+        .group-card strong { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <div class="side-buttons">
         <a href="https://www.leodition.com.br" target="_blank" class="btn-side">Site Leodition</a>
-        <a href="https://wa.me/5551998911304" target="_blank" class="btn-side" style="border-color: #25D366; color: #25D366;">Problemas? Avise-nos</a>
+        <a href="https://wa.me/5551998911304" target="_blank" class="btn-side" style="border-color: #25D366; color: #25D366;">Suporte Whats</a>
     </div>
 
     <div class="container">
-        <div id="finish-overlay">
-            <h2>Todos nomes foram sorteados</h2>
-            <button class="btn-finish" onclick="resetPool()">Sortear novamente</button>
-            <button class="btn-outline" onclick="closeOverlay()">Escolher outra modalidade</button>
-        </div>
-
-        <div class="brand-area">
+        <!-- Coluna de Configuração -->
+        <div class="config-col">
             <img src="assets/img/logo/leologo.png" alt="Logo Leodition" class="logo-site">
             <h1>Sorteador</h1>
+
+            <div class="menu-sorteio">
+                <button class="btn-mode active" id="btn-ind" onclick="setMode('individual')">Individual</button>
+                <button class="btn-mode" id="btn-grp" onclick="setMode('grupo')">Grupos</button>
+            </div>
+
+            <textarea id="namesInput" placeholder="Nomes separados por vírgula..." oninput="updatePreview()"></textarea>
+            <p class="input-tip">Dica voz: Diga o nome e use "BARRA" para separar (ex: Leo barra Maria).</p>
+
+            <div class="input-controls">
+                <button class="btn-tool" onclick="document.getElementById('fileIn').click()">📂 Foto ou Lista</button>
+                <button class="btn-tool" id="voiceBtn" onclick="toggleVoice()">🎤 Voz</button>
+            </div>
+            <input type="file" id="fileIn" style="display:none" accept="image/*,.txt" onchange="handleFile(this)">
+
+            <div id="grp-opt" style="display:none; margin-bottom:20px;">
+                <select id="grpSize" style="width:100%; padding:12px; background:#1a1a1a; color:#fff; border:1px solid var(--border); border-radius:8px;">
+                    <option value="2">Formar Duplas</option>
+                    <option value="3">Formar Trios</option>
+                    <option value="4">Formar Quartetos</option>
+                </select>
+            </div>
+
+            <button class="btn-draw" id="mainBtn" onclick="execute()">Sortear Agora!</button>
+            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary);"></div>
         </div>
 
-        <div class="menu-sorteio">
-            <button class="btn-mode active" onclick="changeMode('roleta', this)">Individual</button>
-            <button class="btn-mode" onclick="changeMode('grupos', this)">Grupos</button>
-            <button class="btn-mode disabled">
-                Amigo Secreto
-                <span class="badge-soon">EM BREVE</span>
-            </button>
-        </div>
-
-        <textarea id="namesInput" placeholder="Nomes separados por vírgula..." oninput="clearPool()"></textarea>
-
-        <div id="group-settings">
-            <label style="color: var(--text-muted);">Tamanho dos grupos:</label>
-            <select id="groupSize" style="background:#000; color:#fff; border:1px solid #333; padding:5px; border-radius:5px;">
-                <option value="2">2 pessoas</option>
-                <option value="3">3 pessoas</option>
-                <option value="4">4 pessoas</option>
-            </select>
-        </div>
-
-        <div id="roulette-section">
-            <div id="pointer"></div>
-            <div id="roulette-wrapper">
-                <canvas id="canvas" width="300" height="300"></canvas>
+        <!-- Coluna de Visualização -->
+        <div class="display-col">
+            <div class="display-area">
+                <div id="ind-view" style="width:100%; height:100%; position:relative; display:flex; align-items:center;">
+                    <div class="pointer p-top"></div>
+                    <div class="reel-track" id="track">
+                        <div class="slot">Aguardando...</div>
+                    </div>
+                    <div class="pointer p-bottom"></div>
+                </div>
+                <div id="group-result"></div>
             </div>
         </div>
-
-        <div id="big-result">VENCEDOR</div>
-
-        <button class="btn-draw" id="drawBtn" onclick="startDraw()">Sortear nome</button>
-
-        <div id="finalResults" class="result-box">Os resultados aparecerão aqui.</div>
     </div>
 
     <script>
-        let mode = 'roleta';
-        let availablePool = [];
-        let currentRotation = 0;
-        const wrapper = document.getElementById('roulette-wrapper');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
+        let mode = 'individual';
+        let pool = [];
+        const track = document.getElementById('track');
+        const namesInput = document.getElementById('namesInput');
+        const grpResult = document.getElementById('group-result');
 
-        function changeMode(m, btn) {
-            if (m === 'amigo') return;
+        function setMode(m) {
             mode = m;
-            document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('roulette-section').style.display = (m === 'roleta') ? 'block' : 'none';
-            document.getElementById('group-settings').style.display = (m === 'grupos') ? 'block' : 'none';
-            document.getElementById('big-result').style.display = 'none';
-            document.getElementById('drawBtn').innerText = (m === 'grupos') ? 'Sortear grupos' : 'Sortear nome';
-            if (m === 'roleta') drawRoulette();
+            document.getElementById('btn-ind').classList.toggle('active', m === 'individual');
+            document.getElementById('btn-grp').classList.toggle('active', m === 'grupo');
+            document.getElementById('grp-opt').style.display = m === 'grupo' ? 'block' : 'none';
+            document.getElementById('ind-view').style.display = m === 'individual' ? 'flex' : 'none';
+            grpResult.style.display = m === 'grupo' ? 'flex' : 'none';
+            if(m === 'individual') updatePreview();
         }
 
-        function getNames() {
-            return document.getElementById('namesInput').value.split(',').map(n => n.trim()).filter(n => n !== "");
-        }
-
-        function clearPool() {
-            availablePool = [];
-            if (mode === 'roleta') drawRoulette();
-        }
-
-        function resetPool() {
-            availablePool = [];
-            document.getElementById('finish-overlay').style.display = 'none';
-            document.getElementById('big-result').style.display = 'none';
-            drawRoulette();
-        }
-
-        function closeOverlay() {
-            document.getElementById('finish-overlay').style.display = 'none';
-        }
-
-        function drawRoulette() {
-            const names = availablePool.length > 0 ? availablePool : getNames();
-            if (names.length === 0) {
-                ctx.clearRect(0,0,300,300);
-                return;
+        async function handleFile(input) {
+            const file = input.files[0]; if(!file) return;
+            const log = document.getElementById('status-log');
+            if(file.type.startsWith('image/')) {
+                log.innerText = "⏳ Lendo caderno...";
+                const res = await Tesseract.recognize(file, 'por');
+                namesInput.value = res.data.text.split('\n').map(l => l.replace(/^[0-9.\-\s]+/, '').trim()).filter(l => l.length > 2).join(', ');
+                log.innerText = "✅ Foto lida!";
+            } else {
+                const r = new FileReader();
+                r.onload = e => { namesInput.value = e.target.result.replace(/[\r\n]+/g, ', '); log.innerText = "✅ Lista importada!"; };
+                r.readAsText(file);
             }
-            const arc = (Math.PI * 2) / names.length;
-            ctx.clearRect(0, 0, 300, 300);
-            
-            names.forEach((name, i) => {
-                const angle = i * arc;
-                ctx.fillStyle = i % 2 === 0 ? "#FFB800" : "#FF6B00";
-                ctx.beginPath();
-                ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 145, angle, angle + arc, false);
-                ctx.closePath();
-                ctx.fill();
-
-                ctx.save();
-                ctx.fillStyle = "#000";
-                ctx.font = "bold 14px sans-serif";
-                ctx.translate(150 + Math.cos(angle + arc/2) * 100, 150 + Math.sin(angle + arc/2) * 100);
-                ctx.rotate(angle + arc/2 + Math.PI/2);
-                ctx.fillText(name.substring(0, 12), -ctx.measureText(name.substring(0, 12)).width/2, 0);
-                ctx.restore();
-            });
+            updatePreview();
         }
 
-        function startDraw() {
+        let recognition;
+        if('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.onresult = e => {
+                let text = e.results[0][0].transcript.replace(/\s*barra\s*/gi, ', ');
+                namesInput.value += (namesInput.value ? ', ' : '') + text;
+                toggleVoice(); updatePreview();
+            };
+        }
+        function toggleVoice() {
+            const btn = document.getElementById('voiceBtn');
+            if(btn.classList.contains('recording')) { recognition.stop(); btn.classList.remove('recording'); btn.style.background=""; }
+            else { recognition.start(); btn.classList.add('recording'); btn.style.background="#ff4b4b"; }
+        }
+
+        function getNames() { return namesInput.value.split(',').map(n => n.trim()).filter(n => n !== ""); }
+
+        function updatePreview() {
+            if(mode !== 'individual') return;
             const names = getNames();
-            if (names.length < 2) return alert("Insira pelo menos 2 nomes.");
+            track.innerHTML = names.length ? names.map(n => `<div class="slot">${n}</div>`).join('') : '<div class="slot">Aguardando...</div>';
+        }
 
-            if (mode === 'roleta') {
-                if (availablePool.length === 0) availablePool = [...names];
-                
-                const drawIndex = Math.floor(Math.random() * availablePool.length);
-                const winner = availablePool[drawIndex];
-                
-                const segmentDeg = 360 / availablePool.length;
-                const targetRotation = 360 - (drawIndex * segmentDeg) - (segmentDeg / 2);
-                const extraSpins = (Math.floor(Math.random() * 5) + 5) * 360;
-                
-                currentRotation += extraSpins + (targetRotation - (currentRotation % 360));
-                wrapper.style.transform = `rotate(${currentRotation}deg)`;
+        function execute() {
+            const names = getNames();
+            if(names.length < 2) return alert("Mínimo 2 nomes.");
 
-                document.getElementById('drawBtn').disabled = true;
-
+            if(mode === 'individual') {
+                if(!pool.length) pool = [...names];
+                const winnerName = pool[Math.floor(Math.random() * pool.length)];
+                
+                let longList = [];
+                for(let i=0; i<10; i++) longList = [...longList, ...names];
+                const finalPos = (longList.length - names.length) + names.indexOf(winnerName);
+                
+                track.innerHTML = longList.map(n => `<div class="slot">${n}</div>`).join('');
+                track.style.transition = "none";
+                track.style.transform = "translateX(0)";
+                
                 setTimeout(() => {
-                    document.getElementById('big-result').innerText = winner;
-                    document.getElementById('big-result').style.display = 'block';
-                    document.getElementById('drawBtn').disabled = false;
-                    
-                    availablePool.splice(drawIndex, 1);
-                    document.getElementById('finalResults').innerHTML = `Restam ${availablePool.length} nomes no sorteio.`;
+                    track.style.transition = "transform 1.5s cubic-bezier(0.1, 0, 0.1, 1)";
+                    track.style.transform = `translateX(${-(finalPos * 250) - 125}px)`;
+                }, 50);
 
-                    if (availablePool.length === 0) {
-                        setTimeout(() => document.getElementById('finish-overlay').style.display = 'flex', 1500);
-                    } else {
-                        setTimeout(drawRoulette, 1000);
-                    }
-                }, 4100);
-
-            } else if (mode === 'grupos') {
-                const size = parseInt(document.getElementById('groupSize').value);
+                document.getElementById('mainBtn').disabled = true;
+                setTimeout(() => {
+                    document.querySelectorAll('.slot')[finalPos].classList.add('win');
+                    pool = pool.filter(n => n !== winnerName);
+                    document.getElementById('status-log').innerText = `Sorteado: ${winnerName} | Restam: ${pool.length}`;
+                    document.getElementById('mainBtn').disabled = false;
+                }, 1600);
+            } else {
+                const size = parseInt(document.getElementById('grpSize').value);
                 const shuffled = [...names].sort(() => 0.5 - Math.random());
-                let html = `<p style="color:var(--primary); font-weight:bold; margin-bottom:10px;">GRUPOS FORMADOS</p>`;
+                grpResult.innerHTML = '<h2 style="color:var(--primary); font-size:1rem; margin-bottom:10px;">GRUPOS FORMADOS</h2>';
                 for (let i = 0; i < shuffled.length; i += size) {
-                    const group = shuffled.slice(i, i + size);
-                    html += `<div style="margin-bottom:8px; color:#fff;"><strong>Grupo ${Math.floor(i/size) + 1}:</strong> ${group.join(', ')}</div>`;
+                    const g = shuffled.slice(i, i + size);
+                    grpResult.innerHTML += `<div class="group-card"><strong>Grupo ${Math.floor(i/size)+1}</strong>${g.join(' & ')}</div>`;
                 }
-                document.getElementById('finalResults').innerHTML = html;
             }
         }
-        
-        window.onload = drawRoulette;
+        window.onload = updatePreview;
     </script>
 </body>
 </html>
