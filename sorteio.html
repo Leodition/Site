@@ -26,7 +26,6 @@
             display: flex; align-items: center; justify-content: center; padding: 20px;
         }
 
-        /* Botões Laterais Fixos */
         .side-buttons { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
         .btn-side {
             background: #1a1a1a; border: 1px solid var(--border); color: var(--text-muted);
@@ -59,7 +58,6 @@
             color: #fff; border-radius: 12px; padding: 15px; font-size: 0.9rem; resize: none; margin-bottom: 10px;
         }
         .input-tip { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
-        .input-tip strong { color: var(--primary); }
 
         .input-controls { display: flex; gap: 8px; margin-bottom: 20px; }
         .btn-tool {
@@ -127,7 +125,7 @@
             </div>
 
             <textarea id="namesInput" placeholder="Nomes separados por vírgula..."></textarea>
-            <p class="input-tip">Para usar por voz: diga <strong>"VÍRGULA"</strong> após cada nome. Ao parar de falar, o sistema salva automaticamente.</p>
+            <p class="input-tip">Voz: diga <strong>"VÍRGULA"</strong> após cada nome. Foto: use listas com letras legíveis.</p>
 
             <div class="input-controls">
                 <button class="btn-tool" onclick="document.getElementById('fileIn').click()">📂 Foto ou Lista</button>
@@ -144,7 +142,7 @@
             </div>
 
             <button class="btn-draw" id="mainBtn" onclick="execute()">Sortear Agora!</button>
-            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary); font-weight: bold;"></div>
+            <div id="status-log" style="margin-top:10px; font-size:0.8rem; color:var(--primary); font-weight: bold; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px;"></div>
         </div>
 
         <div class="display-col">
@@ -182,10 +180,23 @@
         async function handleFile(input) {
             const file = input.files[0]; if(!file) return;
             if(file.type.startsWith('image/')) {
-                log.innerText = "⏳ Lendo caderno...";
-                const res = await Tesseract.recognize(file, 'por');
-                namesInput.value = res.data.text.split('\n').map(l => l.replace(/^[0-9.\-\s]+/, '').trim()).filter(l => l.length > 2).join(', ');
-                log.innerText = "✅ Foto lida!";
+                log.innerText = "⏳ Limpando imagem e lendo (pode demorar)...";
+                try {
+                    const res = await Tesseract.recognize(file, 'por', {
+                        logger: m => { if(m.status === 'recognizing text') log.innerText = `⏳ Lendo: ${Math.round(m.progress * 100)}%`; }
+                    });
+                    
+                    // FILTRO INTELIGENTE: Remove lixo de caligrafia
+                    const names = res.data.text.split('\n')
+                        .map(l => l.replace(/[^a-zA-ZÀ-ÿ\s]/g, '').trim()) // Mantém só letras e acentos
+                        .filter(l => l.length > 3) // Ignora letras soltas/ruído
+                        .join(', ');
+                    
+                    namesInput.value = names;
+                    log.innerText = names ? "✅ Lista extraída!" : "⚠️ Não consegui entender a letra. Tente uma foto mais clara.";
+                } catch (e) {
+                    log.innerText = "❌ Erro ao processar imagem.";
+                }
             } else {
                 const r = new FileReader();
                 r.onload = e => { namesInput.value = e.target.result.replace(/[\r\n]+/g, ', '); log.innerText = "✅ Lista importada!"; };
@@ -196,48 +207,36 @@
 
         let recognition;
         let isRecording = false;
-
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.lang = 'pt-BR';
             recognition.continuous = true;
-            recognition.interimResults = false;
-
             recognition.onresult = (event) => {
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     if (event.results[i].isFinal) {
                         let text = event.results[i][0].transcript;
-                        if (namesInput.value.trim() !== "") {
-                            let separator = namesInput.value.trim().endsWith(',') ? ' ' : ', ';
-                            namesInput.value = namesInput.value.trim() + separator + text;
-                        } else {
-                            namesInput.value = text;
-                        }
+                        let separator = namesInput.value.trim() !== "" ? (namesInput.value.trim().endsWith(',') ? ' ' : ', ') : '';
+                        namesInput.value = namesInput.value.trim() + separator + text;
                         updatePreview();
                     }
                 }
             };
-            recognition.onerror = () => stopVoice();
         }
 
         function toggleVoice() {
-            if (!recognition) return alert("Navegador sem suporte. Use Chrome.");
-            isRecording ? stopVoice() : startVoice();
-        }
-
-        function startVoice() {
-            isRecording = true;
-            recognition.start();
-            document.getElementById('voiceBtn').classList.add('recording');
-            log.innerText = "🎙️ Ouvindo... diga os nomes e vírgulas.";
-        }
-
-        function stopVoice() {
-            isRecording = false;
-            recognition.stop();
-            document.getElementById('voiceBtn').classList.remove('recording');
-            log.innerText = "🎙️ Microfone desligado.";
+            if (!recognition) return alert("Use Chrome para voz.");
+            if (isRecording) {
+                recognition.stop();
+                isRecording = false;
+                document.getElementById('voiceBtn').classList.remove('recording');
+                log.innerText = "🎙️ Microfone desligado.";
+            } else {
+                recognition.start();
+                isRecording = true;
+                document.getElementById('voiceBtn').classList.add('recording');
+                log.innerText = "🎙️ Ouvindo... diga os nomes.";
+            }
         }
 
         function getNames() { return namesInput.value.split(',').map(n => n.trim()).filter(n => n !== ""); }
@@ -250,7 +249,7 @@
 
         function execute() {
             const names = getNames();
-            if(names.length < 2) return alert("Mínimo 2 nomes.");
+            if(names.length < 2) return alert("Adicione ao menos 2 nomes.");
 
             if(mode === 'individual') {
                 if(!pool.length) pool = [...names];
