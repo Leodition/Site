@@ -1,0 +1,82 @@
+:root{color-scheme:dark;--background:#10100f;--panel:#1c1a17;--line:#39342d;--text:#faf5ee;--muted:#c2b8ad;--accent:#f9a14c;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--background);color:var(--text);min-width:300px}
+[hidden]{display:none!important}
+a{color:inherit}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:wait;opacity:.65}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.shell{max-width:1536px;padding:0 5.2%;margin:auto;min-height:100svh;display:flex;flex-direction:column}
+header,footer{display:flex;align-items:center;justify-content:space-between;gap:18px}
+header{height:94px;border-bottom:1px solid #292622;margin-bottom:32px}
+.brand img{display:block;width:139px;max-height:57px;object-fit:contain}
+.header-label,.overline,.signature{font-size:.75rem;font-weight:700;letter-spacing:.16em}
+.header-label{color:#d0c6b9}
+main{flex:1;display:grid;align-content:center}
+.grid{width:100%;min-height:620px;display:grid;grid-template-columns:1.28fr 1fr;border:1px solid var(--line);border-radius:24px;overflow:hidden}
+.intro{display:flex;align-items:flex-end;min-width:0;position:relative;isolation:isolate;background:#332118 url('/formandos/hero.webp') center 49%/cover no-repeat}
+.intro::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#100b08 1%,#1a0e08cb 25%,#22120d18 74%),linear-gradient(90deg,#130a0747,transparent)}
+.intro-copy{padding:44px clamp(27px,4.1vw,63px) 55px}
+.overline{color:#ffba74;display:flex;align-items:center;gap:10px;margin:0 0 19px}
+.overline span{width:25px;height:1px;background:currentColor}
+h1,h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;letter-spacing:-.045em}
+h1{font-size:clamp(4rem,7.1vw,7.35rem);line-height:.87;margin:0}
+h1 em{color:#f7a658;font-weight:400}
+.tagline{color:#f2e0d1;font-size:1.05rem;margin:24px 0 0}
+.access{display:grid;place-items:center;background:var(--panel);padding:44px clamp(26px,4vw,68px)}
+.access-inner{width:100%;max-width:425px}
+.icon{display:grid;place-items:center;width:53px;height:53px;background:#30241a;border:1px solid #583d28;border-radius:15px;color:var(--accent);margin-bottom:22px}
+.icon svg{width:25px;height:25px}
+h2{font-size:clamp(2.08rem,3.25vw,3.35rem);line-height:1.02;margin:0 0 13px}
+p{line-height:1.55}
+.access h2+p{margin:0 0 27px;color:var(--muted)}
+fieldset{border:0;padding:0;margin:0 0 21px}
+label,legend{font-size:.875rem;font-weight:650}
+legend{padding:0;margin-bottom:9px}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.choices label{position:relative}
+.choices input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.choices span{display:flex;justify-content:center;align-items:center;min-height:47px;padding:5px;border:1px solid #494038;border-radius:9px;background:#231f1b;text-align:center}
+.choices input:checked+span{background:#38291c;border-color:var(--accent);color:#ffc58c}
+.choices input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+input:not([type=radio]),select{width:100%;border:1px solid #494038;border-radius:9px;background:#171513;color:var(--text);padding:13px 14px}
+#code{margin:9px 0 16px}
+input::placeholder{color:#a69b90}
+.primary,.secondary{display:inline-flex;justify-content:center;align-items:center;min-height:46px;border-radius:9px;padding:10px 17px;font-weight:750;text-decoration:none}
+.primary{background:var(--accent);border:1px solid var(--accent);color:#211309}
+.primary:hover{background:#ffb56e}
+.secondary{background:transparent;color:var(--text);border:1px solid #51483e}
+.secondary:hover{background:#2d261f}
+#accessForm .primary{width:100%;min-height:49px}
+.hint{display:flex;gap:7px;line-height:1.45;margin:19px 0 0;color:var(--muted);font-size:.8125rem}
+.hint span{color:var(--accent)}
+.message{color:#ffba89;font-size:.875rem}
+.message:empty{display:none}
+footer{min-height:82px;color:#b9aea3;font-size:.8125rem}
+footer a{color:#d9cabc}
+.signature{display:flex;align-items:center;gap:9px;text-transform:uppercase;letter-spacing:.09em}
+dialog{color:var(--text);background:#171411;border:1px solid #514031;border-radius:20px;padding:32px;text-align:center;max-width:calc(100vw - 32px)}
+dialog::backdrop{background:#0b0907ea}
+#loading img{width:180px;max-width:100%}
+#loading p{font-size:.8rem;font-weight:750;letter-spacing:.13em;margin:16px 0 0}
+.progress{height:2px;width:180px;max-width:100%;margin:22px auto 0;background:linear-gradient(90deg,transparent,#ff9e44,transparent);animation:pulse 1.15s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.35;transform:scaleX(.55)}to{opacity:1;transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){.progress{animation:none}}
+.workspace{padding:clamp(22px,4vw,54px);background:var(--panel);border:1px solid var(--line);border-radius:24px;min-height:465px}
+.workspace p{color:var(--muted)}
+.workspace .message{color:#ffba89}
+.workspace h2{margin-bottom:19px}
+.workspace .overline{color:var(--accent)}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:18px 0}
+.toolbar input,.toolbar select{width:auto;max-width:100%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:13px;padding:13px;background:#141310;min-width:0}
+.card button.photo{border:0;background:none;padding:0;display:block;width:100%}
+.card img{display:block;width:100%;height:230px;object-fit:cover;border-radius:8px;background:#27201b}
+.card a{margin-top:12px}
+#lightbox{padding:12px}
+#lightbox button{display:block;margin:0 0 10px auto;color:var(--text);background:#30251e;border:1px solid var(--line);border-radius:7px;font-size:1.5rem;padding:0 12px}
+#lightbox img{display:block;max-width:100%;max-height:76vh}
+@media(max-width:810px){.grid{grid-template-columns:1fr}.intro{min-height:430px}.intro-copy{padding:34px}.access{padding:34px}.access-inner{max-width:550px}header{height:76px;margin-bottom:19px}}
+@media(max-width:430px){.shell{padding:0 4%}.intro{min-height:350px}.intro-copy{padding:24px}.access{padding:24px 19px}.header-label{font-size:.66rem}.brand img{width:111px}footer{flex-wrap:wrap;justify-content:flex-start;padding:16px 0;gap:8px 16px}}

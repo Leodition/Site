@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://abclva.leodition.com.br; img-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+<link rel="canonical" href="https://leodition.com.br/formandos/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Formandos 2026 | Leodition">
+<meta property="og:description" content="Acesse suas fotos de formatura com o código recebido da Leodition.">
+<meta property="og:url" content="https://leodition.com.br/formandos/">
+<meta property="og:image" content="https://leodition.com.br/formandos/hero.webp">
+<title>Formandos 2026 | Leodition</title>
+<meta name="description" content="Portal de fotos da formatura 2026 da Leodition.">
+<link rel="stylesheet" href="/formandos/style.css"><script type="module" src="/formandos/app.js"></script>
+</head>
+<body>
+<div class="shell">
+<header><a class="brand" href="/" aria-label="Leodition — site oficial"><img src="/formandos/logo.webp" alt="Leodition Marketing Play"></a><span class="header-label">PORTAL DO FORMANDO</span></header>
+<main>
+<div class="grid" id="home">
+<section class="intro" aria-labelledby="title">
+<div class="intro-copy"><p class="overline"><span></span> GALERIA DE FORMATURA</p><h1 id="title">Formandos<br><em>2026</em></h1><p class="tagline">Um capítulo que merece ser lembrado.</p></div>
+</section>
+<section class="access" aria-labelledby="accessTitle">
+<div class="access-inner">
+<div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="3.5"/></svg></div>
+<h2 id="accessTitle">Encontre suas fotos</h2>
+<p>Selecione sua turma e use o código de acesso recebido da Leodition.</p>
+<form id="accessForm">
+<fieldset><legend>Sua turma</legend><div class="choices">
+<label><input type="radio" name="turma" value="91" required><span>Turma 91</span></label>
+<label><input type="radio" name="turma" value="92"><span>Turma 92</span></label>
+<label><input type="radio" name="turma" value="93"><span>Turma 93</span></label>
+</div></fieldset>
+<label for="code">Código de acesso</label>
+<input id="code" name="code" required placeholder="Digite seu código" autocomplete="off" maxlength="64" spellcheck="false">
+<button class="primary">Acessar minhas fotos</button>
+<p class="message" id="message" role="alert"></p>
+</form>
+<p class="hint"><span aria-hidden="true">ⓘ</span> Se você precisar do seu código, fale com a equipe da Leodition.</p>
+</div>
+</section>
+</div>
+<section id="gallery" class="workspace" hidden></section>
+</main>
+<footer><span>© 2026 Leodition Marketing Play</span><a class="signature" href="/">Conheça a Leodition</a><a href="https://abclva.leodition.com.br/formandos/admin">Área administrativa</a></footer>
+</div>
+<dialog id="loading" aria-labelledby="loadingText"><img src="/formandos/logo.webp" alt="Leodition"><div class="progress"></div><p id="loadingText">CARREGANDO TURMA…</p></dialog>
+<dialog id="lightbox" aria-label="Visualização da foto"><button aria-label="Fechar foto">×</button><img alt=""></dialog>
+</body>
+</html>
